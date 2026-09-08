@@ -112,7 +112,11 @@ export class AvailabilityService {
     try {
       const ava = await this.availabilityModel.findById(id);
       if (!ava) {
-        throw new NotFoundException('Availability not found');
+        const buss = await this.findAvaByBussID(id);
+        if (!buss) {
+          throw new NotFoundException('No se econtraron datos para este ID');
+        }
+        return buss;
       }
       return ava;
     } catch (error) {
