@@ -111,13 +111,6 @@ export class AvailabilityService {
   async findOne(id: string) {
     try {
       const ava = await this.availabilityModel.findById(id);
-      if (!ava) {
-        const buss = await this.findAvaByBussID(id);
-        if (!buss) {
-          throw new NotFoundException('No se econtraron datos para este ID');
-        }
-        return buss;
-      }
       return ava;
     } catch (error) {
       console.log(error);
