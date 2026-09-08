@@ -41,7 +41,7 @@ export class AvailabilityService {
     const dates = this.createDayList(new Date());
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     dates.forEach(async (dayDate) => {
-      const existDate = await this.findDatesAlreadyCreated(id, dayDate);      
+      const existDate = await this.findDatesAlreadyCreated(id, dayDate);
       if (!existDate) await this.createInfoToAvailabilityModel(id, dayDate);
     });
   }

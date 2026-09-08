@@ -32,6 +32,11 @@ export class AvailabilityController {
     return this.availabilityService.findOne(id);
   }
 
+  @Get(':id')
+  findAvailabilityByBussiness(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.availabilityService.findAvaByBussID(id);
+  }
+
   @Patch(':id')
   update(
     @Param('id', ParseMongoIdPipe) id: string,
