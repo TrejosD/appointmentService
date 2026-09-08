@@ -27,6 +27,8 @@ export class TasksService {
   }
   // este metodo busca todos los bussiness y crea una agenda diaria, por 14 dias, de espacios vacios de acuerdo a su schedule.
   // todo este metodo, debe de llamarse cada que se crea un bussiness nuevo
+  // todo, este metodo crear las agendas de todos los bussiness, necesito, otro especifico, para un solo bussiness. Y llamar ese al crear el bussines.
+  // argumento buss.id, y llama al populateEmptyAgengas(buss.id) una vez.
   async createNewAgendas() {
     const bussinesses = await this.bussinessService.findAll();
     if (bussinesses == null) {

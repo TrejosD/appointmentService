@@ -41,8 +41,7 @@ export class AvailabilityService {
     const dates = this.createDayList(new Date());
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     dates.forEach(async (dayDate) => {
-      const existDate = await this.findDatesAlreadyCreated(id, dayDate);
-      console.log(existDate);
+      const existDate = await this.findDatesAlreadyCreated(id, dayDate);      
       if (!existDate) await this.createInfoToAvailabilityModel(id, dayDate);
     });
   }
@@ -58,6 +57,13 @@ export class AvailabilityService {
 
   async createInfoToAvailabilityModel(id: string, dayDate: Date) {
     const buss = await this.bussinessService.findOne(id);
+    console.log('==================');
+    console.log('BUSSINESS ID:', id);
+    console.log('Bussiness:', JSON.stringify(buss, null, 2));
+    console.log('Schedule:', buss?.schedule);
+    console.log('Schedule Start:', buss?.schedule.startYourney);
+    console.log('Schedule End:', buss?.schedule.endYourney);
+    console.log('==================');
     if (buss != null) {
       const slots = this.createEmptyAgenda(
         dayDate,
