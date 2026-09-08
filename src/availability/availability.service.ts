@@ -111,6 +111,7 @@ export class AvailabilityService {
   async findOne(id: string) {
     try {
       const ava = await this.availabilityModel.findById(id);
+      console.log(ava);
       return ava;
     } catch (error) {
       console.log(error);
