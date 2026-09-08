@@ -26,13 +26,13 @@ export class AvailabilityController {
   findAll() {
     return this.availabilityService.findAll();
   }
-// todo problema, estos 2 metodos reciben el mismo parametro. Como identificar cual de los 2 se ejecutan?
-  // @Get(':id')
-  // findOne(@Param('id', ParseMongoIdPipe) id: string) {
-  //   return this.availabilityService.findOne(id);
-  // }
-
+  // todo problema, estos 2 metodos reciben el mismo parametro. Como identificar cual de los 2 se ejecutan?
   @Get(':id')
+  findOne(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.availabilityService.findOne(id);
+  }
+  // este metodo funciona, necesito lograr la coexistencia de ambos.
+  @Post(':id')
   findAvailabilityByBussiness(@Param('id', ParseMongoIdPipe) id: string) {
     return this.availabilityService.findAvaByBussID(id);
   }
