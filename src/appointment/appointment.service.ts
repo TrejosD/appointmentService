@@ -3,7 +3,6 @@ import {
   forwardRef,
   Inject,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
@@ -30,7 +29,7 @@ export class AppointmentService {
       status: AppointmentStatus.inProcess,
       bussinessID: createAppointmentDto.bussinessID,
       customerID: createAppointmentDto.customerID,
-      serviceID: createAppointmentDto.serviceID,
+      productID: createAppointmentDto.productID,
       startTime: createAppointmentDto.startTime,
     };
     const newApp = await this.appointmentModel.create({ ...app });

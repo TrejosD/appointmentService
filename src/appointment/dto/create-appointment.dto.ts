@@ -6,7 +6,7 @@ export class CreateAppointmentDto {
   @IsString()
   customerID: string;
   @IsString()
-  serviceID: string;
+  productID: string;
   @IsString()
   dayDate: Date;
   @IsString()
