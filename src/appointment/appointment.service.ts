@@ -25,6 +25,7 @@ export class AppointmentService {
     private readonly availabilityService: AvailabilityService,
   ) {}
   async create(id: string, createAppointmentDto: CreateAppointmentDto) {
+    console.log(createAppointmentDto);
     const app = {
       status: AppointmentStatus.inProcess,
       bussinessID: createAppointmentDto.bussinessID,
