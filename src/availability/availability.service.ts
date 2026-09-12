@@ -23,11 +23,11 @@ export class AvailabilityService {
   constructor(
     @InjectModel(Availability.name)
     @Inject(forwardRef(() => AppointmentService))
-    @InjectConnection()
-    private readonly connection: Connection,
     private readonly availabilityModel: Model<AvailabilityDocument>,
     private readonly bussinessService: BussinessService,
     private readonly appointmentService: AppointmentService,
+    @InjectConnection()
+    private readonly connection: Connection,
   ) {}
   // este metodo deberia crear un dia de espacios disponibles para citas
   async create(createAvailabilityDto: CreateAvailabilityDto) {
