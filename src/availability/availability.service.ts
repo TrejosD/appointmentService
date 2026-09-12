@@ -11,8 +11,8 @@ import {
   Availability,
   AvailabilityDocument,
 } from './entities/availability.entity';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
+import { Model, Connection } from 'mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { BussinessService } from 'src/bussiness/bussiness.service';
 import { Appointment } from 'src/appointment/entities/appointment.entity';
 import { SpaceTime } from 'src/bussiness/entities/space_time.entity';
@@ -23,6 +23,8 @@ export class AvailabilityService {
   constructor(
     @InjectModel(Availability.name)
     @Inject(forwardRef(() => AppointmentService))
+    @InjectConnection()
+    private readonly connection: Connection,
     private readonly availabilityModel: Model<AvailabilityDocument>,
     private readonly bussinessService: BussinessService,
     private readonly appointmentService: AppointmentService,
@@ -36,7 +38,6 @@ export class AvailabilityService {
     return newAva;
   }
   // este metodo crea los dias necesarios de agenda, desde hoy a 14 dias
-  // todo, necesito metodo que revise las availability actuales, asi no sobre escribir, crear solo los faltantes. osea un dia nuevo cada vez.
   populateEmptyAgendas(id: string) {
     const dates = this.createDayList(new Date());
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -57,13 +58,6 @@ export class AvailabilityService {
 
   async createInfoToAvailabilityModel(id: string, dayDate: Date) {
     const buss = await this.bussinessService.findOne(id);
-    console.log('==================');
-    console.log('BUSSINESS ID:', id);
-    console.log('Bussiness:', JSON.stringify(buss, null, 2));
-    console.log('Schedule:', buss?.schedule);
-    console.log('Schedule Start:', buss?.schedule.startYourney);
-    console.log('Schedule End:', buss?.schedule.endYourney);
-    console.log('==================');
     if (buss != null) {
       const slots = this.createEmptyAgenda(
         dayDate,
@@ -97,17 +91,17 @@ export class AvailabilityService {
     }
     return dateList;
   }
-
+  // metodo escuentra todos los espacios availability para un bussiness
   async findAvaByBussID(id: string) {
     const allAvas = await this.findAll();
     return allAvas.filter((ava) => ava.bussinessID === id);
   }
-
+  // metodo retorna todos los espacios availability
   async findAll() {
     const ava = await this.availabilityModel.find({});
     return ava;
   }
-
+  // metodo busca un availability con el ID
   async findOne(id: string) {
     try {
       const ava = await this.availabilityModel.findById(id);
@@ -145,6 +139,8 @@ export class AvailabilityService {
   }
 
   async updateAgendaSpace(appointment: Appointment, time: number, id: string) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
     try {
       const buss = await this.bussinessService.findOne(appointment.bussinessID);
       const ava = await this.findOne(id);
@@ -172,7 +168,9 @@ export class AvailabilityService {
         item.endTime = new Date(startTime + neededTime * 60000);
         item.reservationId = appointment._id.toString();
       });
-      await ava?.save();
+      ava.markModified('slots');
+      await ava?.save({ session });
+      await session.commitTransaction();
       const appEndTime = new Date(startTime.getTime() + neededTime * 60000);
       await this.appointmentService.updateEndTime(
         appointment._id.toString(),
@@ -183,6 +181,8 @@ export class AvailabilityService {
       if (error instanceof Error) {
         throw new BadRequestException(error.message);
       }
+    } finally {
+      await session.endSession();
     }
   }
   // este metodo, retorna una lista con los espacios para cita, de acuerdo al tiempo del producto
