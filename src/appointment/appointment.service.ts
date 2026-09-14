@@ -42,11 +42,16 @@ export class AppointmentService {
       return spaceUpdated;
     } catch (error) {
       await this.remove(newApp._id.toString());
-      // todo a flutter llega este mensaje
-      // aca tengo que vetificar el status code, igual como hice en el otro metodo, y tirar ambos mensajes
-      throw new BadRequestException(
-        'Espacio para cita no disponible - check logs',
-      );
+      if (error instanceof Error) {
+        console.log(`Appointment service 45 ${error}`);
+        console.log(`Error name ${error.name}`);
+        console.log(`Error message ${error.message}`);
+        // todo a flutter llega este mensaje
+        // aca tengo que vetificar el status code, igual como hice en el otro metodo, y tirar ambos mensajes
+        throw new BadRequestException(
+          'Espacio para cita no disponible - check logs',
+        );
+      }
     }
   }
 
