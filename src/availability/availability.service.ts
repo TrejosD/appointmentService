@@ -179,7 +179,8 @@ export class AvailabilityService {
       return spaceTime;
     } catch (error) {
       if (error instanceof Error) {
-        console.log(error);
+        console.log('Error catched on updateagendaSpace 182')
+        console.log(error.name);
         throw new BadRequestException(error.message);
       }
     } finally {
@@ -207,12 +208,14 @@ export class AvailabilityService {
     const consecutive = slots.every((slot, index) => {
       // esto debe darnos BadRequest, cuando apartir de segun espacio No esta disponible.
       if (!slot.isAvailable && index !== 0) {
+        console.log('211 error catched on getConsecutive');
         throw new BadRequestException(
           `Ventana de tiempo insuficente para el servicio seleccionado`,
         );
       }
       // esto nos debe dar NotFound, cuando el primer espacio no esta disponible
       if (!slot.isAvailable) {
+        console.log('218 error catched on getConsecutive');
         throw new NotFoundException(`Espacio para cita no disponible`);
       }
       // si todo sale bien retornamos el espacio
