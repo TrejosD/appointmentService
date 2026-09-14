@@ -204,10 +204,20 @@ export class AvailabilityService {
     if (slots.length !== blocksNeeded) return null;
     // todo salio bien, creo una lista con los slots necesarios para la cita.
     const consecutive = slots.every((slot, index) => {
-      if (!slot.isAvailable) {
-        throw new BadRequestException(`Espacio para cita no disponible`);
+      // esto debe darnos BadRequest, cuando apartir de segun espacio No esta disponible.
+      if (!slot.isAvailable && index !== 0) {
+        throw new BadRequestException(
+          `Ventana de tiempo insuficente para el servicio seleccionado`,
+        );
       }
-      if (index === 0) return true;
+      // esto nos debe dar NotFound, cuando el primer espacio no esta disponible
+      if (!slot.isAvailable) {
+        throw new NotFoundException(`Espacio para cita no disponible`);
+      }
+      // si todo sale bien retornamos el espacio
+      if (index === 0) {
+        return true;
+      }
       return slot.startTime.getTime() === slots[index - 1].endTime.getTime();
     });
     // este ternario, si consecutive is true, retorno los slots sino null.
