@@ -179,8 +179,12 @@ export class AvailabilityService {
       return spaceTime;
     } catch (error) {
       if (error instanceof Error) {
-        console.log('Error catched on updateagendaSpace 182')
-        console.log(error.name);
+        console.log('Error catched on updateagendaSpace 182');
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        console.log(`Cause ${error.cause}`);
+        console.log(`Name ${error.name}`);
+        console.log(`Message ${error.message}`);
+        console.log(`Stack ${error.stack}`);
         throw new BadRequestException(error.message);
       }
     } finally {
