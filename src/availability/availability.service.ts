@@ -179,6 +179,7 @@ export class AvailabilityService {
       return spaceTime;
     } catch (error) {
       if (error instanceof Error) {
+        console.log(error);
         throw new BadRequestException(error.message);
       }
     } finally {
