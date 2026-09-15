@@ -179,11 +179,11 @@ export class AvailabilityService {
       return spaceTime;
     } catch (error) {
       if (error instanceof Error) {
-        if (error.name === 'BadRequestException') {
+        if (error.name.toString() === 'BadRequestException') {
           console.log('Error fue badRequest');
           throw new BadRequestException(error.message);
         }
-        if (error.name === 'NotFoundException') {
+        if (error.name.toString() === 'NotFoundException') {
           console.log('Error fue notFound');
           throw new NotFoundException(error.message);
         }

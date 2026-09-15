@@ -48,8 +48,11 @@ export class AppointmentService {
         console.log(`Error message ${error.message}`);
         // todo a flutter llega este mensaje
         // aca tengo que vetificar el status code, igual como hice en el otro metodo, y tirar ambos mensajes
-        if (error.name === 'BadRequestException') {
+        if (error.name.toString() === 'BadRequestException') {
           throw new BadRequestException(error.message);
+        }
+        if (error.name.toString() === 'NotFoundException') {
+          throw new NotFoundException(error.message);
         }
       }
     }
