@@ -11,6 +11,10 @@ export class Customer extends Document {
   @Prop({
     index: true,
   })
+  apellido: string;
+  @Prop({
+    index: true,
+  })
   gender: string;
 }
 
