@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   forwardRef,
   Inject,
   Injectable,
@@ -53,6 +54,9 @@ export class AppointmentService {
         }
         if (error.name == 'NotFoundException') {
           throw new NotFoundException(error.message);
+        }
+        if (error.name == 'ConflictException') {
+          throw new ConflictException(error.message);
         }
       }
     }

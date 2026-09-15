@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   forwardRef,
   Inject,
   Injectable,
@@ -17,6 +18,7 @@ import { BussinessService } from 'src/bussiness/bussiness.service';
 import { Appointment } from 'src/appointment/entities/appointment.entity';
 import { SpaceTime } from 'src/bussiness/entities/space_time.entity';
 import { AppointmentService } from 'src/appointment/appointment.service';
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 @Injectable()
 export class AvailabilityService {
@@ -186,6 +188,10 @@ export class AvailabilityService {
         if (error.name == 'NotFoundException') {
           console.log('Error fue notFound');
           throw new NotFoundException(error.message);
+        } else {
+          throw new ConflictException(
+            'Lo sentimos. El espacio seleccionado ya fue ocupado',
+          );
         }
         console.log('No paso nada');
       }
