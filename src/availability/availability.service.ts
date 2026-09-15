@@ -180,11 +180,14 @@ export class AvailabilityService {
     } catch (error) {
       if (error instanceof Error) {
         if (error.name === 'BadRequestException') {
+          console.log('Error fue badRequest');
           throw new BadRequestException(error.message);
         }
         if (error.name === 'NotFoundException') {
+          console.log('Error fue notFound');
           throw new NotFoundException(error.message);
         }
+        console.log('No paso nada');
       }
     } finally {
       await session.endSession();
