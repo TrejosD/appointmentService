@@ -20,6 +20,7 @@ export class User extends Document {
   fullName: string;
   @Prop({
     index: true,
+    default: true,
   })
   isActive: boolean;
   @Prop({
