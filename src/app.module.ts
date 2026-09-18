@@ -11,6 +11,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { CustomerModule } from './customer/customer.module';
 import { ConfigModule } from '@nestjs/config';
 import { EnvConfiguration } from './config/env.config';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -26,6 +27,7 @@ import { EnvConfiguration } from './config/env.config';
     AvailabilityModule,
     AppointmentModule,
     CustomerModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
