@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-export const RawHeaders = createParamDecorator((ctx: ExecutionContext) => {
-  const req = ctx.switchToHttp().getRequest();
-  // const raw: string[] = req.rawHeaders;
-  console.log(req);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return req;
-});
+export const RawHeaders = createParamDecorator(
+  (data: string, ctx: ExecutionContext) => {
+    const req = ctx.switchToHttp().getRequest();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    return req.rawHeaders;
+  },
+);
