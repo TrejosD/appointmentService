@@ -18,6 +18,7 @@ import { JwtModule } from '@nestjs/jwt';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: () => {
+        console.log(process.env.JWT_SECRET);
         return {
           secret: process.env.JWT_SECRET,
           signOptions: {
