@@ -13,7 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
   imports: [
     ConfigModule,
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
