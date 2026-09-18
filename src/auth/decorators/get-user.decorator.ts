@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
@@ -14,10 +15,5 @@ export const GetUser = createParamDecorator((data, ctx: ExecutionContext) => {
   const user: User = req.user;
   // si no encontramos el user, mostramos el error, si esta lo retornamos
   if (!user) throw new InternalServerErrorException('User not found (request)');
-  if (data == null) {
-    return user;
-  }
-  if (data == 'email') {
-    return user.email;
-  }
+  return !data ? user : user[data];
 });
