@@ -36,7 +36,7 @@ export class AuthService {
     // tomamos los datos del login
     const { password, email } = loginUserDto;
     // buscamos el user
-    const user = await this.userModel.findById({ email });
+    const user = await this.userModel.findOne({ email });
     // si el user no se encuentra, el email no es valido
     if (!user) {
       throw new UnauthorizedException('Credentials are not valid (email)');
