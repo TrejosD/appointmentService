@@ -19,15 +19,11 @@ export class AuthController {
   }
   @Get('private')
   @UseGuards(AuthGuard())
-  testingPrivateRoute(
-    @GetUser() user: User,
-    @GetUser('email') userEmail: string,
-  ) {
+  testingPrivateRoute(@GetUser() user: User) {
     return {
       ok: true,
       message: 'Chupalo',
       user,
-      userEmail,
     };
   }
 }
