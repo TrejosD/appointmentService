@@ -3,7 +3,8 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export const RawHeaders = createParamDecorator((ctx: ExecutionContext) => {
   const req = ctx.switchToHttp().getRequest();
-  const raw: string[] = req.rawHeaders;
-  console.log(raw);
-  return raw;
+  // const raw: string[] = req.rawHeaders;
+  console.log(req);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return req;
 });
