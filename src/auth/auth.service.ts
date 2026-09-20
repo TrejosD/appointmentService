@@ -37,7 +37,14 @@ export class AuthService {
   async checkStatus(user: User): Promise<any> {
     const userDb = await this.userModel.findById({ _id: user._id });
     if (!userDb) throw new UnauthorizedException('Credetials are not valid');
-    return { ...userDb, token: this.getJwToken({ id: userDb.id }) };
+    const { id, password, email, fullName } = userDb;
+    return {
+      id,
+      fullName,
+      password,
+      email,
+      token: this.getJwToken({ id: userDb.id }),
+    };
   }
   // metodo para hacer el login del usuario
   async login(loginUserDto: LoginUserDto) {
