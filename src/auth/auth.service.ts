@@ -33,23 +33,18 @@ export class AuthService {
       console.log(error);
     }
   }
-
+  // metodo revisa si el usuario esta autenticado, y entrega un nuevo token
   checkStatus(user: User) {
-    // const userDb = await this.userModel.findById({ _id: user._id });
-    // if (!userDb) throw new UnauthorizedException('Credetials are not valid');
-    // const { id, password, email, fullName } = userDb;
+    const { _id, password, email, fullName } = user;
     return {
-      ...user,
+      _id,
+      fullName,
+      email,
+      password,
       token: this.getJwToken({ id: user._id.toHexString() }),
     };
-    // return {
-    //   id,
-    //   fullName,
-    //   password,
-    //   email,
-    //   token: this.getJwToken({ id: userDb.id }),
-    // };
   }
+
   // metodo para hacer el login del usuario
   async login(loginUserDto: LoginUserDto) {
     // tomamos los datos del login
