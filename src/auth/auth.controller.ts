@@ -23,7 +23,7 @@ export class AuthController {
 
   @Get('check-auth-status')
   // todo necesito perdir el token, de ahi puedo tomar el id
-  @Auth()
+  @Auth(ValidRoles.user)
   checkAuthStatus(@GetUser() user: User) {
     return this.authService.checkStatus(user);
   }
@@ -47,7 +47,7 @@ export class AuthController {
 
   @Get('private2')
   // usando el RoleProtected, es como administro que tipo de usuario puede acceder a uno ruta
-  @RoleProtected(ValidRoles.admin)
+  @RoleProtected()
   @UseGuards(AuthGuard(), UserRolesGuard)
   testingRoute(@GetUser() user: User) {
     return {
