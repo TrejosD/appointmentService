@@ -23,7 +23,7 @@ export class AuthController {
 
   @Get('check-auth-status')
   // todo necesito perdir el token, de ahi puedo tomar el id
-  @Auth(ValidRoles.user)
+  @Auth()
   checkAuthStatus(@GetUser() user: User) {
     return this.authService.checkStatus(user);
   }

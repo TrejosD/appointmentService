@@ -34,17 +34,21 @@ export class AuthService {
     }
   }
 
-  async checkStatus(user: User): Promise<any> {
-    const userDb = await this.userModel.findById({ _id: user._id });
-    if (!userDb) throw new UnauthorizedException('Credetials are not valid');
-    const { id, password, email, fullName } = userDb;
+  checkStatus(user: User) {
+    // const userDb = await this.userModel.findById({ _id: user._id });
+    // if (!userDb) throw new UnauthorizedException('Credetials are not valid');
+    // const { id, password, email, fullName } = userDb;
     return {
-      id,
-      fullName,
-      password,
-      email,
-      token: this.getJwToken({ id: userDb.id }),
+      ...user,
+      token: this.getJwToken({ id: user._id.toHexString() }),
     };
+    // return {
+    //   id,
+    //   fullName,
+    //   password,
+    //   email,
+    //   token: this.getJwToken({ id: userDb.id }),
+    // };
   }
   // metodo para hacer el login del usuario
   async login(loginUserDto: LoginUserDto) {
