@@ -22,6 +22,7 @@ export class UserRolesGuard implements CanActivate {
       META_ROLES,
       context.getHandler(),
     );
+    if (!validRoles) return true;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const req = context.switchToHttp().getRequest();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
