@@ -7,6 +7,8 @@ import * as bcrypt from 'bcrypt';
 import { LoginUserDto, CreateUserDto } from './dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 
+// todo necesito importar el AuthModule, en todos los modulos que necesito la autentificacion
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -30,6 +32,12 @@ export class AuthService {
       }
       console.log(error);
     }
+  }
+
+  async checkStatus(user: User): Promise<any> {
+    const userDb = await this.userModel.findById({ _id: user._id });
+    if (!userDb) throw new UnauthorizedException('Credetials are not valid');
+    return { ...userDb, token: this.getJwToken({ id: userDb.id }) };
   }
   // metodo para hacer el login del usuario
   async login(loginUserDto: LoginUserDto) {
