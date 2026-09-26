@@ -1,11 +1,14 @@
-import { Document, HydratedDocument } from 'mongoose';
+import { Document, HydratedDocument, Types } from 'mongoose';
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import {
   SpaceTime,
   SpaceTimeSchema,
 } from 'src/bussiness/entities/space_time.entity';
 
-export type AvailabilityDocument = HydratedDocument<Availability>;
+export type AvailabilityDocument = HydratedDocument<
+  Availability,
+  { slots: Types.DocumentArray<SpaceTime> }
+>;
 
 @Schema()
 export class Availability extends Document {

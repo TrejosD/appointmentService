@@ -16,6 +16,7 @@ export class AuthService {
     private readonly userModel: Model<UserDocument>,
     private readonly jwtService: JwtService,
   ) {}
+  // metodo para crear un usuario nuevo
   async create(createUserDto: CreateUserDto): Promise<any> {
     try {
       // mediante desextructuracion sacamos el valor del password
@@ -63,7 +64,7 @@ export class AuthService {
     // todo aca estamos retornando solamente el email y el token del usuario, si es necesario traer mas data
     return { email: user.email, token: this.getJwToken({ id: user.id }) };
   }
-
+  // metodo genera un JWToken
   private getJwToken(payload: JwtPayload) {
     const token = this.jwtService.sign(payload);
     return token;

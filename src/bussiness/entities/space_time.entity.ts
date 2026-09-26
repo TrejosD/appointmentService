@@ -1,7 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ObjectId } from 'mongoose';
 // revisar los cambios se elemino el serviceDate. Esta info estaria ahora en appointment
 @Schema()
 export class SpaceTime {
+  _id?: ObjectId;
   @Prop({
     index: true,
   })

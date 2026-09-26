@@ -16,6 +16,12 @@ export type BussinessDocument = HydratedDocument<
 @Schema()
 export class Bussiness extends Document {
   @Prop({
+    required: true,
+    type: Types.ObjectId,
+    ref: 'User',
+  })
+  userId: Types.ObjectId;
+  @Prop({
     index: true,
   })
   name: string;

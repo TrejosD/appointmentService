@@ -4,6 +4,7 @@
 /build
 /mongo
 
+firebase-config.json
 # Logs
 logs
 *.log

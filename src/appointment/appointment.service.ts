@@ -12,10 +12,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   Appointment,
   AppointmentDocument,
-  AppointmentStatus,
 } from './entities/appointment.entity';
-import { Model } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 import { AvailabilityService } from 'src/availability/availability.service';
+import { NotificationsService } from 'src/notifications/notifications.service';
 
 @Injectable()
 export class AppointmentService {
@@ -24,11 +24,12 @@ export class AppointmentService {
     private readonly appointmentModel: Model<AppointmentDocument>,
     @Inject(forwardRef(() => AvailabilityService))
     private readonly availabilityService: AvailabilityService,
+    private readonly notificationsService: NotificationsService,
   ) {}
+  // metodo agenda una cita, en el espacio ID seleccionado "AvailabilitySpace". **Si el producto, necesita un tiempo mayor a un solo sloth de tiempo, agenda el siguiente espacio automaticamente si esta disponible, sino, error.
   async create(id: string, createAppointmentDto: CreateAppointmentDto) {
-    console.log(createAppointmentDto);
     const app = {
-      status: AppointmentStatus.inProcess,
+      slothID: createAppointmentDto.slothID,
       bussinessID: createAppointmentDto.bussinessID,
       customerID: createAppointmentDto.customerID,
       productID: createAppointmentDto.productID,
@@ -40,15 +41,14 @@ export class AppointmentService {
         id,
         newApp,
       );
+      console.log('Lista la cita');
+      console.log(spaceUpdated);
+      // todo aca deberia enviar la notificacion que se agendo la cita
+      // tengo el bussinessID, deberia de tener un ligamen de que user es dueño del bussiness o algo asi, para tomar los pushTOken
       return spaceUpdated;
     } catch (error) {
       await this.remove(newApp._id.toString());
       if (error instanceof Error) {
-        console.log(`Appointment service 46 ${error}`);
-        console.log(`Error name ${error.name}`);
-        console.log(`Error message ${error.message}`);
-        // todo a flutter llega este mensaje
-        // aca tengo que vetificar el status code, igual como hice en el otro metodo, y tirar ambos mensajes
         if (error.name == 'BadRequestException') {
           throw new BadRequestException(error.message);
         }
@@ -61,15 +61,36 @@ export class AppointmentService {
       }
     }
   }
-
+  // metodo retorna todas las citas. appointment
   async findAll() {
     const allApp = await this.appointmentModel.find({});
     return allApp;
   }
 
-  async findOne(id: string) {
+  // metodo retorna una cita, de acuerdo al ID
+  async findOne(term: string) {
+    let app: Appointment | null = null;
     try {
-      const app = await this.appointmentModel.findById(id);
+      if (isValidObjectId(term)) {
+        app = await this.appointmentModel.findById(term);
+      }
+      if (!app) {
+        app = await this.appointmentModel.findOne({ customerID: term });
+      }
+      if (!app) {
+        app = await this.appointmentModel.findOne({ startTime: term });
+      }
+      return app;
+    } catch (error) {
+      throw new NotFoundException(
+        `Appointment: ${term} not found - Error: ${error}`,
+      );
+    }
+  }
+
+  async findOneByUserId(id: string) {
+    try {
+      const app = await this.findOne(id);
       return app;
     } catch (error) {
       throw new NotFoundException(
@@ -77,17 +98,26 @@ export class AppointmentService {
       );
     }
   }
-
+  // metodo para editar un espacio de cita
+  // todo dar la posibilidad al usuario de editar su cita
   async update(id: string, updateAppointmentDto: UpdateAppointmentDto) {
-    const appToUpdate = await this.findOne(id);
-    if (appToUpdate == null) {
+    const appointmentToUpdate = await this.findOne(id);
+    if (appointmentToUpdate == null) {
       throw new NotFoundException('Appointment Spaces not found');
     }
-    appToUpdate?.updateOne(updateAppointmentDto);
-    return appToUpdate;
+    appointmentToUpdate?.updateOne(updateAppointmentDto);
+    return appointmentToUpdate;
   }
 
+  // todo listo el metodo, vamos a probar
   async remove(id: string) {
+    const appointment = await this.appointmentModel.findById(id);
+    if (!appointment) throw new NotFoundException('Appointment not found');
+    const ava = await this.availabilityService.findOne(
+      appointment.startTime.toISOString(),
+    );
+    if (!ava) throw new NotFoundException('Availability not found');
+    await this.availabilityService.freeAvailabilitySpace(ava, appointment, id);
     const { deletedCount } = await this.appointmentModel.deleteOne({ _id: id });
     if (deletedCount === 0) {
       throw new NotFoundException(`Appointment with id: ${id} not found`);
@@ -100,4 +130,19 @@ export class AppointmentService {
     app!.endTime = time;
     await app?.save();
   }
+
+  // todo, este metodo, debe liberar el espacio de cita, pero tambien eliminar el reservation
+  // async freeAppointmentSpace(id: string, appointment: Appointment) {
+  //   try {
+  //     const freeSpace = await this.availabilityService.freeAvailabilitySpace(
+  //       id,
+  //       appointment,
+  //     );
+  //     return freeSpace;
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       throw new BadRequestException('Appointment Space were not free', error);
+  //     }
+  //   }
+  // }
 }

@@ -11,4 +11,6 @@ export class CreateAppointmentDto {
   dayDate: Date;
   @IsString()
   startTime: Date;
+  @IsString()
+  slothID: string;
 }

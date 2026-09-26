@@ -7,17 +7,20 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateAvailabilityDto } from './dto/create-availability.dto';
-import { UpdateAvailabilityDto } from './dto/update-availability.dto';
 import {
   Availability,
   AvailabilityDocument,
 } from './entities/availability.entity';
-import { Model, Connection } from 'mongoose';
+import { Model, Connection, isValidObjectId } from 'mongoose';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { BussinessService } from 'src/bussiness/bussiness.service';
 import { Appointment } from 'src/appointment/entities/appointment.entity';
 import { SpaceTime } from 'src/bussiness/entities/space_time.entity';
 import { AppointmentService } from 'src/appointment/appointment.service';
+import {
+  Bussiness,
+  BussinessDocument,
+} from 'src/bussiness/entities/bussiness.entity';
 
 @Injectable()
 export class AvailabilityService {
@@ -25,11 +28,16 @@ export class AvailabilityService {
     @InjectModel(Availability.name)
     @Inject(forwardRef(() => AppointmentService))
     private readonly availabilityModel: Model<AvailabilityDocument>,
+    @InjectModel(Bussiness.name)
+    private readonly bussinessModel: Model<BussinessDocument>,
     private readonly bussinessService: BussinessService,
     private readonly appointmentService: AppointmentService,
     @InjectConnection()
     private readonly connection: Connection,
   ) {}
+
+  // todo que al eliminarse una cita, el espacio vuelva a ser disponible
+
   // este metodo deberia crear un dia de espacios disponibles para citas
   async create(createAvailabilityDto: CreateAvailabilityDto) {
     const newAva = await this.createInfoToAvailabilityModel(
@@ -43,11 +51,13 @@ export class AvailabilityService {
     const dates = this.createDayList(new Date());
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     dates.forEach(async (dayDate) => {
+      // revisamos si la fecha "dayDate" actual existe
       const existDate = await this.findDatesAlreadyCreated(id, dayDate);
+      // si la fecha actual no existe, la creamos
       if (!existDate) await this.createInfoToAvailabilityModel(id, dayDate);
     });
   }
-
+  // metodo revisa los espacios de agenda creados actualmente
   async findDatesAlreadyCreated(id: string, dayDate: Date): Promise<boolean> {
     const avas = await this.findAvaByBussID(id);
     return avas.some((ava) => {
@@ -56,7 +66,7 @@ export class AvailabilityService {
       return new Date(avaDate).getTime() === new Date(dateToCompare).getTime();
     });
   }
-
+  // este metodo crea un dia de availability sloths vacios, para un bussines, en la fecha indicada.
   async createInfoToAvailabilityModel(id: string, dayDate: Date) {
     const buss = await this.bussinessService.findOne(id);
     if (buss != null) {
@@ -75,15 +85,16 @@ export class AvailabilityService {
       return newAva;
     }
   }
-
+  // metodo limpia el formato de fecha
   cleanDate(date: Date): Date {
     return new Date(
       Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
     );
   }
-
+  // metodo crea una lista de fechas basado en hoy, los dias que le indiquemos adelante.
   createDayList(today: Date): Date[] {
     const dateList: Date[] = [];
+    // esta es la cantidad de dias de agenda que creamos
     for (let i = 0; i < 10; i++) {
       const newToday = today;
       const dateTosave = newToday.setDate(newToday.getDate() + 1);
@@ -102,10 +113,19 @@ export class AvailabilityService {
     const ava = await this.availabilityModel.find({});
     return ava;
   }
-  // metodo busca un availability con el ID
-  async findOne(id: string) {
+  // metodo busca un availability con el ID, bussID y dayDate
+  async findOne(term: string) {
+    let ava: Availability | null = null;
     try {
-      const ava = await this.availabilityModel.findById(id);
+      if (isValidObjectId(term)) {
+        ava = await this.availabilityModel.findById(term);
+      }
+      if (!ava) {
+        ava = await this.availabilityModel.findOne({ bussinessID: term });
+      }
+      if (!ava) {
+        ava = await this.availabilityModel.findOne({ dayDate: term });
+      }
       return ava;
     } catch (error) {
       console.log(error);
@@ -113,10 +133,63 @@ export class AvailabilityService {
     }
   }
 
-  update(id: string, updateAvailabilityDto: UpdateAvailabilityDto) {
-    return `Metod not performed ${id}`;
+  async findSlothByAppointmentId(id: string, slothId: string) {
+    const ava = await this.findOne(id);
+    const sloths = ava?.slots.filter((item) => item.reservationId === slothId);
+    return sloths;
   }
+  // necesito el avaID = id
+  // bussId = app.busID
+  // startTime = app.startTime
+  // productID = app.productID
 
+  async freeAvailabilitySpace(
+    ava: Availability,
+    appointment: Appointment,
+    appId: string,
+  ) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+    try {
+      const spacesToFree = await this.findSlothByAppointmentId(
+        ava._id.toString(),
+        appId,
+      );
+      const buss = await this.bussinessModel.findById(appointment.bussinessID);
+      if (!buss)
+        throw new NotFoundException(
+          'Bussiness - Availability information not found',
+        );
+      spacesToFree?.forEach((item) => {
+        const startTime = item.startTime;
+        const bussTime = buss.defaultAppointmentTime;
+        const slothTime = new Date(startTime.getTime() + bussTime * 60000);
+        item.endTime = slothTime;
+        item.isAvailable = true;
+        item.reservationId = '';
+      });
+      ava.markModified('slots');
+      await ava?.save({ session });
+      await session.commitTransaction();
+      return 'Appointment Space Free';
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.name == 'BadRequestException') {
+          throw new BadRequestException(error.message);
+        }
+        if (error.name == 'NotFoundException') {
+          throw new NotFoundException(error.message);
+        } else {
+          throw new ConflictException(
+            'Lo sentimos. El espacio no pudo ser liberado, contact admin',
+          );
+        }
+      }
+    } finally {
+      await session.endSession();
+    }
+  }
+  // metodo actualiza un espacio de agenda para cita
   async updateAppointment(id: string, appointment: Appointment) {
     const product = await this.bussinessService.findProductByID(
       appointment.bussinessID,
@@ -128,7 +201,8 @@ export class AvailabilityService {
     const newApp = await this.updateAgendaSpace(appointment, product.time, id);
     return newApp;
   }
-
+  // metodo elimina un espacio de availability.
+  // todo necesito, posiblemente en appointmentModule, que al eliminar una cita, el espacio vuelva a estar disponible.
   async remove(id: string) {
     const { deletedCount } = await this.availabilityModel.deleteOne({
       _id: id,
@@ -138,7 +212,7 @@ export class AvailabilityService {
     }
     return `Removed - true`;
   }
-
+  // metodo selecciona el espacios availability y lo convierte en un appointment. Tomando los espacios necesarios de acuerdo al tiempo.
   async updateAgendaSpace(appointment: Appointment, time: number, id: string) {
     const session = await this.connection.startSession();
     session.startTransaction();
@@ -192,7 +266,6 @@ export class AvailabilityService {
             'Lo sentimos. El espacio seleccionado ya fue ocupado',
           );
         }
-        console.log('No paso nada');
       }
     } finally {
       await session.endSession();
@@ -219,14 +292,12 @@ export class AvailabilityService {
     const consecutive = slots.every((slot, index) => {
       // esto debe darnos BadRequest, cuando apartir de segun espacio No esta disponible.
       if (!slot.isAvailable && index !== 0) {
-        console.log('211 error catched on getConsecutive');
         throw new BadRequestException(
           `Ventana de tiempo insuficente para el servicio seleccionado`,
         );
       }
       // esto nos debe dar NotFound, cuando el primer espacio no esta disponible
       if (!slot.isAvailable) {
-        console.log('218 error catched on getConsecutive');
         throw new NotFoundException(`Espacio para cita no disponible`);
       }
       // si todo sale bien retornamos el espacio
@@ -238,7 +309,7 @@ export class AvailabilityService {
     // este ternario, si consecutive is true, retorno los slots sino null.
     return consecutive ? slots : null;
   }
-
+  // con este metodo creo los sloths vacios basado en el horario del bussiness
   createEmptyAgenda(
     today: Date, //fecha del dia
     startYourney: number, //number ex: 8 == 8:00 am
