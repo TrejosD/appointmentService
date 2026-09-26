@@ -15,7 +15,6 @@ import {
 } from './entities/appointment.entity';
 import { Model, isValidObjectId } from 'mongoose';
 import { AvailabilityService } from 'src/availability/availability.service';
-import { NotificationsService } from 'src/notifications/notifications.service';
 
 @Injectable()
 export class AppointmentService {
@@ -24,7 +23,6 @@ export class AppointmentService {
     private readonly appointmentModel: Model<AppointmentDocument>,
     @Inject(forwardRef(() => AvailabilityService))
     private readonly availabilityService: AvailabilityService,
-    private readonly notificationsService: NotificationsService,
   ) {}
   // metodo agenda una cita, en el espacio ID seleccionado "AvailabilitySpace". **Si el producto, necesita un tiempo mayor a un solo sloth de tiempo, agenda el siguiente espacio automaticamente si esta disponible, sino, error.
   async create(id: string, createAppointmentDto: CreateAppointmentDto) {
