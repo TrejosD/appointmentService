@@ -20,7 +20,7 @@ export class UserDevice {
     required: true,
     enum: Platforms,
   })
-  platform: Platforms[];
+  platform: Platforms;
   @Prop({
     required: true,
   })
