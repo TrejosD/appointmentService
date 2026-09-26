@@ -13,7 +13,6 @@ import { ConfigModule } from '@nestjs/config';
 import { EnvConfiguration } from './config/env.config';
 import { AuthModule } from './auth/auth.module';
 import { NotificationsModule } from './notifications/notifications.module';
-import { FirebaseModule } from './firebase/firebase.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -32,7 +31,6 @@ import { FirebaseModule } from './firebase/firebase.module';
     CustomerModule,
     AuthModule,
     NotificationsModule,
-    FirebaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
