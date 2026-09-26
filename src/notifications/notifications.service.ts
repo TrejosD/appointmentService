@@ -181,7 +181,7 @@ export class NotificationsService implements OnModuleInit {
     // aca tengo una lista de UserIds. Con cada uno de estos ids, debo, buscar el user, y de ahi si, obtengo los pushToken y toda la info
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     followersIds.map(async (follower) => {
-      const user = await this.userModel.findById(follower.id);
+      const user = await this.userModel.findById(follower);
       if (!user) throw new NotFoundException('User not found');
       const userDevice = await this.userDeviceModel.findById(user.id);
       const response = await this.sendPushNotificationToColecction(

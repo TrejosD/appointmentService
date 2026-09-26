@@ -36,13 +36,13 @@ export class AvailabilityController {
     return this.availabilityService.findAvaByBussID(id);
   }
 
-  @Patch(':id')
-  freeSlothSpace(
-    @Param('id', ParseMongoIdPipe) id: string,
-    appointment: Appointment,
-  ) {
-    return this.availabilityService.freeAvailabilitySpace(id, appointment);
-  }
+  // @Patch(':id')
+  // freeSlothSpace(
+  //   @Param('id', ParseMongoIdPipe) id: string,
+  //   appointment: Appointment,
+  // ) {
+  //   return this.availabilityService.freeAvailabilitySpace(id, appointment);
+  // }
 
   @Delete(':id')
   remove(@Param('id', ParseMongoIdPipe) id: string) {
