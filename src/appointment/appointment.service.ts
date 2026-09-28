@@ -111,9 +111,8 @@ export class AppointmentService {
   async remove(id: string) {
     const appointment = await this.appointmentModel.findById(id);
     if (!appointment) throw new NotFoundException('Appointment not found');
-    console.log('Busqueda por fecha');
-    const fecha = appointment.startTime.toISOString().split('T')[0];
-    const ava = await this.availabilityService.findOne(fecha);
+    console.log('Busqueda por SlothID');
+    const ava = await this.availabilityService.findOne(appointment.slothID);
     console.log(ava);
     if (!ava) throw new NotFoundException('Availability not found');
     await this.availabilityService.freeAvailabilitySpace(ava, appointment, id);
