@@ -172,10 +172,7 @@ export class AvailabilityService {
         slothId,
       );
       const buss = await this.bussinessModel.findById(appointment.bussinessID);
-      if (!buss)
-        throw new NotFoundException(
-          'Bussiness - Availability information not found',
-        );
+      if (!buss) throw new NotFoundException('Bussiness information not found');
       spacesToFree?.forEach((item) => {
         const startTime = item.startTime;
         const bussTime = buss.defaultAppointmentTime;
@@ -207,11 +204,12 @@ export class AvailabilityService {
   }
   // metodo actualiza un espacio de agenda para cita
   async updateAppointment(id: string, appointment: Appointment) {
+    console.log('UpdateAppointment');
     const product = await this.bussinessService.findProductByID(
       appointment.bussinessID,
       appointment.productID,
     );
-    if (product == null) {
+    if (!product) {
       throw new NotFoundException(`Product not found`);
     }
     const newApp = await this.updateAgendaSpace(appointment, product.time, id);
