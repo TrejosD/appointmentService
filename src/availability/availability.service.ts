@@ -129,7 +129,7 @@ export class AvailabilityService {
       if (!ava) {
         console.log('Busqueda por slothID');
         ava = await this.availabilityModel.findOne({
-          'sloths._id': term,
+          'slots.id': term,
         });
       }
       return ava;
