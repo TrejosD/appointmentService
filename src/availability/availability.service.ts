@@ -127,8 +127,10 @@ export class AvailabilityService {
         ava = await this.availabilityModel.findOne({ bussinessID: term });
       }
       if (!ava) {
-        console.log('busqueda por fecha');
-        ava = await this.availabilityModel.findOne({ dayDate: term });
+        console.log('Busqueda por slothID');
+        ava = await this.availabilityModel.findOne({
+          'sloths._id': term,
+        });
       }
       return ava;
     } catch (error) {
@@ -150,14 +152,14 @@ export class AvailabilityService {
   async freeAvailabilitySpace(
     ava: Availability,
     appointment: Appointment,
-    appId: string,
+    slothId: string,
   ) {
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
       const spacesToFree = await this.findSlothByAppointmentId(
         ava._id.toString(),
-        appId,
+        slothId,
       );
       const buss = await this.bussinessModel.findById(appointment.bussinessID);
       if (!buss)
