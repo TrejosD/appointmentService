@@ -115,15 +115,19 @@ export class AvailabilityService {
   }
   // metodo busca un availability con el ID, bussID y dayDate
   async findOne(term: string) {
+    console.log('Inicio busqueda Ava');
+    console.log(term);
     let ava: Availability | null = null;
     try {
       if (isValidObjectId(term)) {
         ava = await this.availabilityModel.findById(term);
       }
       if (!ava) {
+        console.log('busqueda por BussID');
         ava = await this.availabilityModel.findOne({ bussinessID: term });
       }
       if (!ava) {
+        console.log('busqueda por fecha');
         ava = await this.availabilityModel.findOne({ dayDate: term });
       }
       return ava;
