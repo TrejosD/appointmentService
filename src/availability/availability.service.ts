@@ -11,7 +11,7 @@ import {
   Availability,
   AvailabilityDocument,
 } from './entities/availability.entity';
-import { Model, Connection, isValidObjectId, ObjectId, Types } from 'mongoose';
+import { Model, Connection, isValidObjectId } from 'mongoose';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { BussinessService } from 'src/bussiness/bussiness.service';
 import { Appointment } from 'src/appointment/entities/appointment.entity';
@@ -134,12 +134,12 @@ export class AvailabilityService {
   }
 
   async findAvaBySlothID(id: string) {
-    const slothId = new Types.ObjectId(id);
     try {
-      if (isValidObjectId(slothId)) {
+      if (isValidObjectId(id)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const ava = await this.availabilityModel.findOne({
-          'slots.id': slothId,
-        });
+          'slots._id': id,
+        } as any);
         console.log(ava);
         return ava;
       }
