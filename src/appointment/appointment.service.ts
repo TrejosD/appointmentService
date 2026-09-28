@@ -112,7 +112,9 @@ export class AppointmentService {
     const appointment = await this.appointmentModel.findById(id);
     if (!appointment) throw new NotFoundException('Appointment not found');
     console.log('Busqueda por SlothID');
-    const ava = await this.availabilityService.findOne(appointment.slothID);
+    const ava = await this.availabilityService.findAvaBySlothID(
+      appointment.slothID,
+    );
     console.log(ava);
     if (!ava) throw new NotFoundException('Availability not found');
     await this.availabilityService.freeAvailabilitySpace(ava, appointment, id);

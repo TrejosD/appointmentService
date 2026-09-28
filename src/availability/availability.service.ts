@@ -11,7 +11,7 @@ import {
   Availability,
   AvailabilityDocument,
 } from './entities/availability.entity';
-import { Model, Connection, isValidObjectId } from 'mongoose';
+import { Model, Connection, isValidObjectId, ObjectId, Types } from 'mongoose';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { BussinessService } from 'src/bussiness/bussiness.service';
 import { Appointment } from 'src/appointment/entities/appointment.entity';
@@ -126,16 +126,26 @@ export class AvailabilityService {
         console.log('busqueda por BussID');
         ava = await this.availabilityModel.findOne({ bussinessID: term });
       }
-      if (!ava) {
-        console.log('Busqueda por slothID');
-        ava = await this.availabilityModel.findOne({
-          'slots.id': term,
-        });
-      }
       return ava;
     } catch (error) {
       console.log(error);
       throw new NotFoundException(`Availability not found`);
+    }
+  }
+
+  async findAvaBySlothID(id: string) {
+    const slothId = new Types.ObjectId(id);
+    try {
+      if (isValidObjectId(slothId)) {
+        const ava = await this.availabilityModel.findOne({
+          'slots.id': slothId,
+        });
+        console.log(ava);
+        return ava;
+      }
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException('Find Ava by sloth id. Didnt success');
     }
   }
 
