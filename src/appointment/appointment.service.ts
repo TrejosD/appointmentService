@@ -109,7 +109,6 @@ export class AppointmentService {
     const ava = await this.availabilityService.findAvaBySlothID(
       appointment.slothID,
     );
-    console.log('Se busco el AVA', ava);
     if (!ava) throw new NotFoundException('Availability not found');
     await this.availabilityService.freeAvailabilitySpace(ava, appointment, id);
     const { deletedCount } = await this.appointmentModel.deleteOne({ _id: id });

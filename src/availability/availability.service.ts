@@ -170,9 +170,8 @@ export class AvailabilityService {
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
-      const spacesToFree = await this.findSlothByAppointmentId(
-        ava._id.toString(),
-        slothId,
+      const spacesToFree = ava?.slots.filter(
+        (item) => item.reservationId === slothId,
       );
       console.log('Spaces to free', spacesToFree);
       const buss = await this.bussinessModel.findById(appointment.bussinessID);
