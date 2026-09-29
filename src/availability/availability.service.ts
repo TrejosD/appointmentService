@@ -115,6 +115,7 @@ export class AvailabilityService {
   }
   // metodo busca un availability con el ID, bussID y dayDate
   async findOne(term: string) {
+    console.log('Metodo FindOne, avaServicie');
     console.log('Inicio busqueda Ava');
     console.log(term);
     let ava: Availability | null = null;
@@ -134,6 +135,7 @@ export class AvailabilityService {
   }
 
   async findAvaBySlothID(id: string) {
+    console.log('Inicio FindAva BySlothId');
     try {
       if (isValidObjectId(id)) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
