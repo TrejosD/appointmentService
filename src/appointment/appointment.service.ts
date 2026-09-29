@@ -102,12 +102,14 @@ export class AppointmentService {
 
   // todo listo el metodo, vamos a probar
   async remove(id: string) {
+    console.log('Inicio eliminacion de appointment');
     const appointment = await this.appointmentModel.findById(id);
+    console.log('Appointment', appointment);
     if (!appointment) throw new NotFoundException('Appointment not found');
     const ava = await this.availabilityService.findAvaBySlothID(
       appointment.slothID,
     );
-    console.log('Se busco el AVA');
+    console.log('Se busco el AVA', ava);
     if (!ava) throw new NotFoundException('Availability not found');
     await this.availabilityService.freeAvailabilitySpace(ava, appointment, id);
     const { deletedCount } = await this.appointmentModel.deleteOne({ _id: id });

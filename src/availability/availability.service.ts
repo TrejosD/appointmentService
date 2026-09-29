@@ -135,14 +135,14 @@ export class AvailabilityService {
   }
 
   async findAvaBySlothID(id: string) {
-    console.log('Inicio FindAva BySlothId');
+    console.log('Buscando sloth by Id');
     try {
       if (isValidObjectId(id)) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const ava = await this.availabilityModel.findOne({
           'slots._id': id,
         } as any);
-        console.log(ava);
+        console.log('Find sloth by ID', ava);
         return ava;
       }
     } catch (error) {
@@ -166,6 +166,7 @@ export class AvailabilityService {
     appointment: Appointment,
     slothId: string,
   ) {
+    console.log('Inicio freeAvaSpace');
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
@@ -173,6 +174,7 @@ export class AvailabilityService {
         ava._id.toString(),
         slothId,
       );
+      console.log('Spaces to free', spacesToFree);
       const buss = await this.bussinessModel.findById(appointment.bussinessID);
       if (!buss) throw new NotFoundException('Bussiness information not found');
       spacesToFree?.forEach((item) => {
