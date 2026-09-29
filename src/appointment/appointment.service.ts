@@ -26,14 +26,7 @@ export class AppointmentService {
   ) {}
   // metodo agenda una cita, en el espacio ID seleccionado "AvailabilitySpace". **Si el producto, necesita un tiempo mayor a un solo sloth de tiempo, agenda el siguiente espacio automaticamente si esta disponible, sino, error.
   async create(id: string, createAppointmentDto: CreateAppointmentDto) {
-    const app = {
-      slothID: createAppointmentDto.slothID,
-      bussinessID: createAppointmentDto.bussinessID,
-      customerID: createAppointmentDto.customerID,
-      productID: createAppointmentDto.productID,
-      startTime: createAppointmentDto.startTime,
-    };
-    const newApp = await this.appointmentModel.create({ ...app });
+    const newApp = await this.appointmentModel.create(createAppointmentDto);
     try {
       const spaceUpdated = await this.availabilityService.updateAppointment(
         id,
