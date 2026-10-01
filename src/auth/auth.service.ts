@@ -26,7 +26,14 @@ export class AuthService {
         ...userData,
         password: bcrypt.hashSync(password, 10),
       });
-      return { ...user, token: this.getJwToken({ id: user.id }) };
+      const { email, fullName, roles } = user;
+      return {
+        fullName,
+        email,
+        password: user.password,
+        roles,
+        token: this.getJwToken({ id: user.id }),
+      };
     } catch (error) {
       if (error instanceof Error) {
         console.log(error);
