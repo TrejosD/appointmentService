@@ -26,12 +26,12 @@ export class AuthService {
         ...userData,
         password: bcrypt.hashSync(password, 10),
       });
-      const { email, fullName, roles } = user;
       return {
-        fullName,
-        email,
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
         password: user.password,
-        roles,
+        roles: user.roles,
         token: this.getJwToken({ id: user.id }),
       };
     } catch (error) {
@@ -43,13 +43,14 @@ export class AuthService {
   }
   // metodo revisa si el usuario esta autenticado, y entrega un nuevo token
   checkStatus(user: User) {
-    const { _id, password, email, fullName } = user;
+    const { _id, password, email, fullName, roles } = user;
     return {
       _id,
       fullName,
       email,
       password,
       token: this.getJwToken({ id: user._id.toHexString() }),
+      roles,
     };
   }
 
@@ -67,9 +68,14 @@ export class AuthService {
     if (!bcrypt.compareSync(password, user.password)) {
       throw new UnauthorizedException('Credentials are not valid (password)');
     }
-    // retornamos un string, aun no necestio retorna el user
-    // todo aca estamos retornando solamente el email y el token del usuario, si es necesario traer mas data
-    return { email: user.email, token: this.getJwToken({ id: user.id }) };
+    return {
+      id: user.id,
+      fullName: user.fullName,
+      email: user.email,
+      password: user.password,
+      roles: user.roles,
+      token: this.getJwToken({ id: user.id }),
+    };
   }
   // metodo genera un JWToken
   private getJwToken(payload: JwtPayload) {
