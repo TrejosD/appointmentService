@@ -29,12 +29,12 @@ export class AppointmentController {
     return this.appointmentService.findAll();
   }
 
-  @Get(':id')
+  @Get('/:id')
   findOne(@Param('id', ParseMongoIdPipe) id: string) {
     return this.appointmentService.findOne(id);
   }
 
-  @Get('/user:id')
+  @Get('/user/:id')
   findByUserId(@Param('id', ParseMongoIdPipe) id: string) {
     return this.appointmentService.findOneByUserId(id);
   }
@@ -47,7 +47,7 @@ export class AppointmentController {
   //   return this.appointmentService.freeAppointmentSpace(id, appointment);
   // }
 
-  @Patch(':id')
+  @Patch('/:id')
   update(
     @Param('id', ParseMongoIdPipe) id: string,
     @Body() updateAppointmentDto: UpdateAppointmentDto,
@@ -55,7 +55,7 @@ export class AppointmentController {
     return this.appointmentService.update(id, updateAppointmentDto);
   }
 
-  @Delete(':id')
+  @Delete('/:id')
   remove(@Param('id', ParseMongoIdPipe) id: string) {
     return this.appointmentService.remove(id);
   }
