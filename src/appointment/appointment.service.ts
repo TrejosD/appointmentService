@@ -32,8 +32,6 @@ export class AppointmentService {
         id,
         newApp,
       );
-      console.log('Lista la cita');
-      console.log(spaceUpdated);
       // todo aca deberia enviar la notificacion que se agendo la cita
       // tengo el bussinessID, deberia de tener un ligamen de que user es dueño del bussiness o algo asi, para tomar los pushTOken
       return spaceUpdated;
@@ -81,7 +79,7 @@ export class AppointmentService {
 
   async findOneByUserId(id: string) {
     try {
-      const app = await this.appointmentModel.findOne({ customerID: id });
+      const app = await this.appointmentModel.find({ customerID: id });
       return app;
     } catch (error) {
       throw new NotFoundException(
