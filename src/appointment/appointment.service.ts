@@ -81,7 +81,7 @@ export class AppointmentService {
 
   async findOneByUserId(id: string) {
     try {
-      const app = await this.findOne(id);
+      const app = await this.appointmentModel.findOne({ customerID: id });
       return app;
     } catch (error) {
       throw new NotFoundException(

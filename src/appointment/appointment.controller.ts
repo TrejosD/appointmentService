@@ -34,6 +34,11 @@ export class AppointmentController {
     return this.appointmentService.findOne(id);
   }
 
+  @Get('/user:id')
+  findByUserId(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.appointmentService.findOneByUserId(id);
+  }
+
   // @Patch('release/:id')
   // freeAppointmentSpace(
   //   @Param('id', ParseMongoIdPipe) id: string,
