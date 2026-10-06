@@ -28,7 +28,7 @@ export class User extends Document {
     default: ['user'],
   })
   roles: string[];
-// todo para crear un metodo parecido al @BeforeInsert seria en el create, transformar la entrada como necesite.
+  // todo para crear un metodo parecido al @BeforeInsert seria en el create, transformar la entrada como necesite.
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

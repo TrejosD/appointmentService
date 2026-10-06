@@ -4,6 +4,7 @@ import { Position, PositionSchema } from './position.entity';
 import { Product, ProductSchema } from './product.entity';
 import { Schedule, ScheduleSchema } from './schedule.entity';
 import { Contact, ContactSchema } from './contact.entity';
+import { type } from '../../auth/interfaces/index';
 
 export type BussinessDocument = HydratedDocument<
   Bussiness,
@@ -33,10 +34,23 @@ export class Bussiness extends Document {
     index: true,
   })
   address: string;
+  // estructura para GEOJson
   @Prop({
-    index: true,
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: true,
+      default: 'Point',
+    },
+    coordinates: {
+      type: [Number], //[Longitud, latitud]
+      required: true,
+    },
   })
-  urlGPS: string;
+  compassGPS: {
+    type: string;
+    coordinates: number[];
+  };
   @Prop({
     type: [PositionSchema],
     index: true,

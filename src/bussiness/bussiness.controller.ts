@@ -8,9 +8,12 @@ import {
   Delete,
 } from '@nestjs/common';
 import { BussinessService } from './bussiness.service';
-import { CreateBussinessDto } from './dto/create-bussiness.dto';
-import { UpdateBussinessDto } from './dto/update-bussiness.dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id/parse-mongo-id.pipe';
+import {
+  CreateBussinessDto,
+  UpdateBussinessDto,
+  FindNearBussinessDto,
+} from './dto';
 
 @Controller('bussiness')
 export class BussinessController {
@@ -24,6 +27,11 @@ export class BussinessController {
   @Get()
   findAll() {
     return this.bussinessService.findAll();
+  }
+
+  @Get('/near')
+  findNearBussinesses(@Body() findNearBussinessDto: FindNearBussinessDto) {
+    return this.bussinessService.findNearBussiness(findNearBussinessDto);
   }
 
   @Get(':term')

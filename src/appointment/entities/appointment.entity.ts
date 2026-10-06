@@ -29,6 +29,11 @@ export class Appointment extends Document {
     index: true,
   })
   slothID: string;
+  @Prop({
+    index: true,
+    default: 'active',
+  })
+  status: string;
 }
 
 export const AppointmentSchema = SchemaFactory.createForClass(Appointment);

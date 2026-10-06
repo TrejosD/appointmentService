@@ -6,9 +6,12 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model } from 'mongoose';
 import { Bussiness, BussinessDocument } from './entities/bussiness.entity';
-import { CreateBussinessDto } from './dto/create-bussiness.dto';
-import { UpdateBussinessDto } from './dto/update-bussiness.dto';
 import { Follower, FollowerDocument } from './entities/follower.entity';
+import {
+  CreateBussinessDto,
+  UpdateBussinessDto,
+  FindNearBussinessDto,
+} from './dto';
 
 @Injectable()
 export class BussinessService {
@@ -97,6 +100,31 @@ export class BussinessService {
       (item) => item._id!.toString() === productId,
     );
     return product;
+  }
+
+  // metodo retorna los bussiness, cercanos a 5km de distancia. Debo ingresar la lng *longitud y lat *latitud del customer
+  async findNearBussiness(
+    findNearBussinessDto: FindNearBussinessDto,
+    radioMaximoEnMetros: number = 5000,
+  ) {
+    const { page = 1, limit = 10, lat, lng } = findNearBussinessDto;
+    const elementosAEvitar = (Number(page) - 1) * Number(limit);
+    const bussList = await this.bussinessModel
+      .find({
+        compassGPS: {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: [lng, lat],
+            },
+            $maxDistance: radioMaximoEnMetros,
+          },
+        },
+      })
+      .skip(elementosAEvitar)
+      .limit(Number(limit))
+      .exec();
+    return bussList;
   }
 
   async addNewFollower(userId: string, bussId: string) {

@@ -76,11 +76,12 @@ export class AppointmentService {
       );
     }
   }
-
+  // este metodo retorna todas las citas ACTIVAS de usuario
   async findOneByUserId(id: string) {
     try {
       const app = await this.appointmentModel.find({ customerID: id });
-      return app;
+      const activeApp = app.map((app) => app.status == 'active');
+      return activeApp;
     } catch (error) {
       throw new NotFoundException(
         `Appointment with id: ${id} not found - Error: ${error}`,
@@ -121,19 +122,4 @@ export class AppointmentService {
     app!.endTime = time;
     await app?.save();
   }
-
-  // todo, este metodo, debe liberar el espacio de cita, pero tambien eliminar el reservation
-  // async freeAppointmentSpace(id: string, appointment: Appointment) {
-  //   try {
-  //     const freeSpace = await this.availabilityService.freeAvailabilitySpace(
-  //       id,
-  //       appointment,
-  //     );
-  //     return freeSpace;
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       throw new BadRequestException('Appointment Space were not free', error);
-  //     }
-  //   }
-  // }
 }
