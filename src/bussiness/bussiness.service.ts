@@ -39,9 +39,18 @@ export class BussinessService {
     return bussi;
   }
 
+  async findOneById(id: string) {
+    try {
+      const bussiness = await this.bussinessModel.findById(id);
+      return bussiness;
+    } catch (e) {
+      throw new NotFoundException(`Bussiness not found for id: ${e}`);
+    }
+  }
+
   // encuentra un bussiness de acuerdo al ID o nombre o description
-  async findOne(term: string) {
-    let bussiness: Bussiness | null = null;
+  async findBussinessByTerm(term: string) {
+    let bussiness: Bussiness[] | null = null;
     try {
       // buscar por ID
       if (isValidObjectId(term)) {
@@ -49,11 +58,15 @@ export class BussinessService {
       }
       // buscar por nombre
       if (!bussiness) {
-        bussiness = await this.bussinessModel.findOne({ name: term });
+        bussiness = await this.bussinessModel.find({
+          name: { $regex: term, $options: 'i' },
+        });
       }
       // buscar por descripcion
       if (!bussiness) {
-        bussiness = await this.bussinessModel.findOne({ description: term });
+        bussiness = await this.bussinessModel.find({
+          description: { $regex: term, $options: 'i' },
+        });
       }
       return bussiness;
     } catch (error) {
@@ -67,7 +80,7 @@ export class BussinessService {
   // motodo para editar un bussiness
   async update(id: string, updateBussinessDto: UpdateBussinessDto) {
     try {
-      const bussiness = await this.findOne(id);
+      const bussiness = await this.findOneById(id);
       await bussiness?.updateOne(updateBussinessDto);
       return true;
     } catch (error) {
@@ -94,7 +107,7 @@ export class BussinessService {
 
   // buscar un producto en un bussiness
   async findProductByID(id: string, productId: string) {
-    const buss = await this.findOne(id);
+    const buss = await this.findOneById(id);
     const product = buss?.products.find(
       // eslint-disable-next-line @typescript-eslint/no-base-to-string
       (item) => item._id!.toString() === productId,

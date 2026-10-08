@@ -29,14 +29,19 @@ export class BussinessController {
     return this.bussinessService.findAll();
   }
 
+  @Get(':id')
+  findOneById(@Param('id') id: string) {
+    return this.bussinessService.findOneById(id);
+  }
+
   @Get('/near')
   findNearBussinesses(@Body() findNearBussinessDto: FindNearBussinessDto) {
     return this.bussinessService.findNearBussiness(findNearBussinessDto);
   }
 
-  @Get(':term')
-  findOne(@Param('term') term: string) {
-    return this.bussinessService.findOne(term);
+  @Get('/find/:term')
+  findBussinesByTerm(@Param('term') term: string) {
+    return this.bussinessService.findBussinessByTerm(term);
   }
 
   @Patch(':id')
