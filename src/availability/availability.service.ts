@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   BadRequestException,
   ConflictException,
@@ -68,13 +69,14 @@ export class AvailabilityService {
   }
   // este metodo crea un dia de availability sloths vacios, para un bussines, en la fecha indicada.
   async createInfoToAvailabilityModel(id: string, dayDate: Date) {
-    const buss = await this.bussinessService.findOne(id);
+    const buss = await this.bussinessService.findOneById(id);
     if (buss != null) {
+      const schedule = buss?.schedule;
       const slots = this.createEmptyAgenda(
         dayDate,
-        buss.schedule.startYourney,
-        buss.schedule.endYourney,
-        buss?.defaultAppointmentTime,
+        schedule.startYourney,
+        schedule.endYourney,
+        buss.defaultAppointmentTime,
       );
       const infoNeeded = {
         bussinessID: id,
@@ -138,7 +140,6 @@ export class AvailabilityService {
     console.log('Buscando sloth by Id');
     try {
       if (isValidObjectId(id)) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const ava = await this.availabilityModel.findOne({
           'slots._id': id,
         } as any);
@@ -234,7 +235,9 @@ export class AvailabilityService {
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
-      const buss = await this.bussinessService.findOne(appointment.bussinessID);
+      const buss = await this.bussinessService.findOneById(
+        appointment.bussinessID,
+      );
       const ava = await this.findOne(id);
       if (ava == null || buss == null) {
         throw new NotFoundException(

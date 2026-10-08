@@ -4,16 +4,8 @@ import { Position, PositionSchema } from './position.entity';
 import { Product, ProductSchema } from './product.entity';
 import { Schedule, ScheduleSchema } from './schedule.entity';
 import { Contact, ContactSchema } from './contact.entity';
-import { type } from '../../auth/interfaces/index';
 
-export type BussinessDocument = HydratedDocument<
-  Bussiness,
-  {
-    product: Types.DocumentArray<Product>;
-    contact: Types.DocumentArray<Contact>;
-    schedule: Types.DocumentArray<Schedule>;
-  }
->;
+export type BussinessDocument = HydratedDocument<Bussiness>;
 @Schema()
 export class Bussiness extends Document {
   @Prop({
