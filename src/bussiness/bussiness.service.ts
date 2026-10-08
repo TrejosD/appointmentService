@@ -63,7 +63,7 @@ export class BussinessService {
         });
       }
       // buscar por descripcion
-      if (!bussiness) {
+      if (!bussiness || bussiness.length === 0) {
         bussiness = await this.bussinessModel.find({
           description: { $regex: term, $options: 'i' },
         });
