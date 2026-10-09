@@ -80,7 +80,7 @@ export class AppointmentService {
   async findOneByUserId(id: string) {
     try {
       const app = await this.appointmentModel.find({ customerID: id });
-      const activeApp = app.map((app) => app.status == 'active');
+      const activeApp = app.filter((app) => app.status === 'active');
       return activeApp;
     } catch (error) {
       throw new NotFoundException(
