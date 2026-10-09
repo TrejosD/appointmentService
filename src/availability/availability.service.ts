@@ -107,7 +107,10 @@ export class AvailabilityService {
   }
   // metodo escuentra todos los espacios availability para un bussiness
   async findAvaByBussID(id: string) {
-    const allAvas = await this.availabilityModel.find({ bussinessID: id });
+    const allAvas = await this.availabilityModel.find({
+      bussinessID: id,
+      $sort: { dayDate: 1 },
+    });
     return allAvas;
   }
   // metodo retorna todos los espacios availability
@@ -123,11 +126,7 @@ export class AvailabilityService {
         ava = await this.availabilityModel.findById(term);
       }
       if (!ava) {
-        console.log('busqueda por BussID');
-        ava = await this.availabilityModel.findOne({
-          bussinessID: term,
-          $sort: { dayDate: 1 },
-        });
+        ava = await this.availabilityModel.findOne({ bussinessID: term });
       }
       return ava;
     } catch (error) {
