@@ -107,8 +107,8 @@ export class AvailabilityService {
   }
   // metodo escuentra todos los espacios availability para un bussiness
   async findAvaByBussID(id: string) {
-    const allAvas = await this.findAll();
-    return allAvas.filter((ava) => ava.bussinessID === id);
+    const allAvas = await this.availabilityModel.find({ bussinessID: id });
+    return allAvas;
   }
   // metodo retorna todos los espacios availability
   async findAll() {
