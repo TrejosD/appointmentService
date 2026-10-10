@@ -82,4 +82,9 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
     return token;
   }
+
+  async getUserById(id: string) {
+    const user = await this.userModel.findById(id);
+    return user;
+  }
 }

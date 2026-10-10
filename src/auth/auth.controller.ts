@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Get, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  UseGuards,
+  Req,
+  Param,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto } from './dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -27,6 +35,12 @@ export class AuthController {
   checkAuthStatus(@GetUser() user: User) {
     return this.authService.checkStatus(user);
   }
+
+  @Get(':id')
+  getUserById(@Param('id') id: string) {
+    return this.authService.getUserById(id);
+  }
+
   @Get('private')
   @UseGuards(AuthGuard())
   testingPrivateRoute(
