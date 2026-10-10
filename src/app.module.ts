@@ -8,7 +8,6 @@ import { BussinessModule } from './bussiness/bussiness.module';
 import { AvailabilityModule } from './availability/availability.module';
 import { AppointmentModule } from './appointment/appointment.module';
 import { TasksModule } from './tasks/tasks.module';
-import { CustomerModule } from './customer/customer.module';
 import { ConfigModule } from '@nestjs/config';
 import { EnvConfiguration } from './config/env.config';
 import { AuthModule } from './auth/auth.module';
@@ -28,7 +27,6 @@ import { NotificationsModule } from './notifications/notifications.module';
     SeedModule,
     AvailabilityModule,
     AppointmentModule,
-    CustomerModule,
     AuthModule,
     NotificationsModule,
   ],

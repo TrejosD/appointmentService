@@ -4,7 +4,6 @@ import { AppointmentController } from './appointment.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Appointment, AppointmentSchema } from './entities/appointment.entity';
 import { AvailabilityModule } from 'src/availability/availability.module';
-import { CustomerModule } from 'src/customer/customer.module';
 
 @Module({
   controllers: [AppointmentController],
@@ -14,7 +13,6 @@ import { CustomerModule } from 'src/customer/customer.module';
     MongooseModule.forFeature([
       { name: Appointment.name, schema: AppointmentSchema },
     ]),
-    CustomerModule,
   ],
   exports: [AppointmentService],
 })
