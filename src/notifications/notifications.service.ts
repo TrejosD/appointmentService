@@ -122,11 +122,10 @@ export class NotificationsService implements OnModuleInit {
   }
 
   async savePushToken(
-    saveTokenDto: SaveTokenDto,
+    id: string, token: string
   ): Promise<{ success: boolean }> {
-    const { userId, pushToken } = saveTokenDto;
-    await this.userDeviceModel.findByIdAndUpdate(userId, {
-      pushToken: pushToken,
+    await this.userDeviceModel.findByIdAndUpdate(id, {
+      pushToken: token,
     });
     return { success: true };
   }

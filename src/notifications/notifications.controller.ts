@@ -1,18 +1,18 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Param, Body } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
-import { SaveTokenDto } from './dto/save-token.dto';
+
 
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
-  @Post()
-  savePushToken(@Body() saveTokenDto: SaveTokenDto) {
-    return this.notificationsService.savePushToken(saveTokenDto);
+  @Post(':id')
+  savePushToken(@Param('id',) id: string, @Body() token: string) {
+    return this.notificationsService.savePushToken(id, token);
   }
 }
 
-// ### Paso 4: Crear el controlador de Notificaciones
+
 // Crearemos un endpoint HTTP para poder gatillar el envío de pruebas utilizando una petición `POST`.
 
 // Genera un nuevo módulo para las notificaciones:
