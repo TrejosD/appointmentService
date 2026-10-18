@@ -128,7 +128,7 @@ export class NotificationsService implements OnModuleInit {
     await this.userDeviceModel.findByIdAndUpdate(id, {
       pushToken: token,
     });
-    return { success: true };ß
+    return { success: true };
   }
 
   async createNewEntry(createUserDeviceDto: CreateUserDeviceDto){
