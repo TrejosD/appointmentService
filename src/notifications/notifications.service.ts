@@ -18,6 +18,8 @@ import {
   FollowerDocument,
 } from 'src/bussiness/entities/follower.entity';
 import { Product } from 'src/bussiness/entities/product.entity';
+import { CreateUserDeviceDto } from './dtos/createUserDeviceDto';
+import { Platforms } from './interfaces/platforms.interface';
 
 @Injectable()
 export class NotificationsService implements OnModuleInit {
@@ -126,7 +128,12 @@ export class NotificationsService implements OnModuleInit {
     await this.userDeviceModel.findByIdAndUpdate(id, {
       pushToken: token,
     });
-    return { success: true };
+    return { success: true };ß
+  }
+
+  async createNewEntry(createUserDeviceDto: CreateUserDeviceDto){
+    const {userId, pushToken} = createUserDeviceDto;
+    const userDevice = await this.userDeviceModel.create({userId: userId, deviceId:[''],platform: Platforms.android,pushToken: [...pushToken, pushToken] });
   }
 
   async newAppointmentNotification(appointmentId: string) {

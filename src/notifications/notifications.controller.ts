@@ -1,5 +1,6 @@
 import { Controller, Post, Param, Body } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
+import { CreateUserDeviceDto } from './dtos/createUserDeviceDto';
 
 
 @Controller('notifications')
@@ -9,6 +10,11 @@ export class NotificationsController {
   @Post(':id')
   savePushToken(@Param('id',) id: string, @Body() token: string) {
     return this.notificationsService.savePushToken(id, token);
+  }
+
+  @Post()
+  create(@Body() createUserDeviceDto: CreateUserDeviceDto){
+    return this.notificationsService.createNewEntry(createUserDeviceDto);
   }
 }
 
