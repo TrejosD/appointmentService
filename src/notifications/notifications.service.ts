@@ -4,7 +4,6 @@ import { getMessaging } from 'firebase-admin/messaging';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserDevice, UserDeviceDocument } from './entities/user-device.entity';
-import { SaveTokenDto } from './dto/save-token.dto';
 import {
   Appointment,
   AppointmentDocument,
