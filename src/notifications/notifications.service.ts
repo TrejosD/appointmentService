@@ -133,7 +133,7 @@ export class NotificationsService implements OnModuleInit {
 
   async createNewEntry(createUserDeviceDto: CreateUserDeviceDto){
     const {userId, pushToken} = createUserDeviceDto;
-    const userDevice = await this.userDeviceModel.create({userId: userId, deviceId:[''],platform: Platforms.android,pushToken: [...pushToken, pushToken] });
+    const userDevice = await this.userDeviceModel.create({userId: userId, deviceId:[''],platform: Platforms.android,pushToken: [pushToken] });
   }
 
   async newAppointmentNotification(appointmentId: string) {
