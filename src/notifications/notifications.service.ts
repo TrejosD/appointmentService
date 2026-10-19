@@ -84,15 +84,20 @@ export class NotificationsService implements OnModuleInit {
   // metodo envia una mensajes a una coleccion de tokens
   async sendPushNotificationToColecction(
     userId: string,
-    tokens: string[],
     title: string,
     body: string,
   ) {
+    //buscamos los dispositivos del user
+    const userDevice = await this.userDeviceModel.findOne({userId});
+    if(!userDevice || !userDevice.pushToken.length) return;
+    const tokens = userDevice.pushToken;
+    //creamos el mensaje para FCM
     const message = {
       notification: { title, body },
       tokens: tokens,
     };
     try {
+      //se envia la notificacion a todos los dispositivos
       const response = await getMessaging(
         this.firebaseApp,
       ).sendEachForMulticast(message);
@@ -100,19 +105,20 @@ export class NotificationsService implements OnModuleInit {
         const failedTokens: string[] = [];
         response.responses.forEach((resp, idx) => {
           if (!resp.success) {
-            failedTokens.push(tokens[idx]);
+            const error = resp.error;
+            if(
+              error?.code === 'messaging/invalid-registration-token' ||
+              error?.code === 'messaging/registration-token-not-registered'
+            ){
+              failedTokens.push(tokens[idx]);
+            }
           }
         });
         // todo esto deberia eliminar los token invalidos
         if (failedTokens.length > 0) {
-          const setEliminar = new Set(failedTokens);
-          const tokensUpdated = tokens.filter(
-            (token) => !setEliminar.has(token),
-          );
-          console.log(`TOkens que se mantienen `, tokensUpdated);
           await this.userDeviceModel.updateOne(
-            { userId: userId },
-            { pushToken: tokensUpdated },
+            {userId},
+            {$pull:{pushToken: {in: failedTokens}}}
           );
         }
       }
@@ -132,14 +138,18 @@ export class NotificationsService implements OnModuleInit {
   }
 
   async createNewEntry(createUserDeviceDto: CreateUserDeviceDto){
-    const {userId, pushToken} = createUserDeviceDto;
-    const updateDevice = await this.userDeviceModel.findById({userId},
+    const {userId, pushToken, deviceId, platform} = createUserDeviceDto;
+    //* si el token pertenecia a otro usuario lo eliminamos.
+    await this.userDeviceModel.updateMany({
+      userId: { $ne: userId}, pushToken:pushToken},{$pull: {pushToken:pushToken}
+    });
+    //registramos el dispositivo del usuario actual 
+    const updateDevice = await this.userDeviceModel.findOneAndUpdate({userId},
       {
       $setOnInsert:{
-        deviceId: [''],
-        platform: Platforms.android,
+        platform: platform,
       },
-      $addToSet:{pushToken: pushToken}
+      $addToSet:{pushToken: pushToken, deviceId: deviceId}
     },
     {new: true, upsert: true});
     return updateDevice;
@@ -178,7 +188,7 @@ export class NotificationsService implements OnModuleInit {
       userId,
       userDevice!.pushToken,
       'Nuevo Seguidor',
-      `${userInfo?.fullName} es ahora un nuevo seguidor}`,
+      `${userInfo?.fullName} es ahora un nuevo seguidor`,
     );
     return response;
   }

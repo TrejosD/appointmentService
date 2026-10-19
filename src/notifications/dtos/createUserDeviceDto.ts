@@ -6,6 +6,8 @@ export class CreateUserDeviceDto{
     userId: string;
     @IsString()
     pushToken: string;
-    // deviceId
-    // platform
+    @IsString()
+    deviceId: string;
+    @IsString()
+    platform: string;
 }
