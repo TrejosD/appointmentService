@@ -133,7 +133,16 @@ export class NotificationsService implements OnModuleInit {
 
   async createNewEntry(createUserDeviceDto: CreateUserDeviceDto){
     const {userId, pushToken} = createUserDeviceDto;
-    const userDevice = await this.userDeviceModel.create({userId: userId, deviceId:[''],platform: Platforms.android,pushToken: [pushToken] });
+    const updateDevice = await this.userDeviceModel.findById({userId},
+      {
+      $setOnInsert:{
+        deviceId: [''],
+        platform: Platforms.android,
+      },
+      $addToSet:{pushToken: pushToken}
+    },
+    {new: true, upsert: true});
+    return updateDevice;
   }
 
   async newAppointmentNotification(appointmentId: string) {
