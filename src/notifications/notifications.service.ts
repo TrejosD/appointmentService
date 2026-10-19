@@ -167,7 +167,6 @@ export class NotificationsService implements OnModuleInit {
     // metodo necesita token, titulo, body, record? string,string
     const response = await this.sendPushNotificationToColecction(
       appointmentInfo.customerID,
-      userDevice!.pushToken,
       'Nueva cita',
       `${customer?.fullName}: agendó una cita ${appointmentInfo.startTime.toISOString()}`,
     );
@@ -186,7 +185,6 @@ export class NotificationsService implements OnModuleInit {
     // metodo necesita token, titulo, body, record? string,string
     const response = await this.sendPushNotificationToColecction(
       userId,
-      userDevice!.pushToken,
       'Nuevo Seguidor',
       `${userInfo?.fullName} es ahora un nuevo seguidor`,
     );
@@ -210,7 +208,6 @@ export class NotificationsService implements OnModuleInit {
       const userDevice = await this.userDeviceModel.findById(user.id);
       const response = await this.sendPushNotificationToColecction(
         user.id,
-        userDevice!.pushToken,
         'Producto en Promoción',
         `${product.name} se encuentra en promoción ahora}`,
       );
