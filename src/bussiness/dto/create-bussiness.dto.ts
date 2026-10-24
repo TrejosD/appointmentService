@@ -1,4 +1,5 @@
 import { IsString, MinLength } from 'class-validator';
+import { Contact } from '../entities/contact.entity';
 
 export class CreateBussinessDto {
   @IsString()
@@ -12,4 +13,5 @@ export class CreateBussinessDto {
   @IsString()
   @MinLength(8)
   address: string;
+  contactInfo: Contact;
 }

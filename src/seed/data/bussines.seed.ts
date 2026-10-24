@@ -2,10 +2,11 @@ import { Contact } from 'src/bussiness/entities/contact.entity';
 import { Schedule } from 'src/bussiness/entities/schedule.entity';
 
 export const BUSSINESS_SEED: {
+  userId: string;
   name: string;
   description: string;
   address: string;
-  urlGPS: string;
+  compassGPS: string[]; //[long, lat]
   positions: object[];
   products: object[];
   schedule: Schedule;
@@ -17,9 +18,10 @@ export const BUSSINESS_SEED: {
   customerComments: string[];
 }[] = [
   {
+    userId: '6abebcd1c088b6d56523cfee',
     name: 'Barberia Machis',
     description: 'Barberia y peluqueria con estilo',
-    urlGPS: 'asdasdasda',
+    compassGPS: ['49,5', '50.1'],
     address: '100 metros sur iglesia',
     positions: [
       {
@@ -52,9 +54,10 @@ export const BUSSINESS_SEED: {
     ],
   },
   {
+    userId: '6abebcd1c088b6d56523cfee',
     name: 'Salon Divinas',
     description: 'Salon de belleza profesional',
-    urlGPS: 'asdasdl;kas',
+    compassGPS: ['49,5', '50.1'],
     address: '250 metros este McDonals',
     positions: [
       {
@@ -92,9 +95,10 @@ export const BUSSINESS_SEED: {
     customerComments: ['Trabajo Rapido', 'Me gusto el corte', 'Buen servicio'],
   },
   {
+    userId: '6abebcd1c088b6d56523cfee',
     name: 'Uñas karla',
     description: 'Uñas con estilo moderno',
-    urlGPS: 'asldjalsdj',
+    compassGPS: ['49,5', '50.1'],
     address: 'frente al parque de copan',
     positions: [
       {

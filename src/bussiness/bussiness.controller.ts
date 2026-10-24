@@ -13,6 +13,7 @@ import {
   CreateBussinessDto,
   UpdateBussinessDto,
   FindNearBussinessDto,
+  ExtraBussinessInfoDto,
 } from './dto';
 
 @Controller('bussiness')
@@ -44,14 +45,19 @@ export class BussinessController {
     return this.bussinessService.findBussinessByTerm(term);
   }
 
-  @Patch(':id')
+  @Patch('/update/:id')
   update(
     @Param('id', ParseMongoIdPipe) id: string,
     @Body() updateBussinessDto: UpdateBussinessDto,
   ) {
-    console.log(`Bussines Controller`);
     return this.bussinessService.update(id, updateBussinessDto);
   }
+
+  @Patch('/add/:id')
+  addExtraInfo(@Param('id', ParseMongoIdPipe) id: string,
+@Body() extraBussinessInfoDto: ExtraBussinessInfoDto ){
+  return this.bussinessService.addExtraBussinesInfo(id,extraBussinessInfoDto);
+}
 
   @Delete(':id')
   remove(@Param('id') id: string) {

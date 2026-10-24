@@ -11,6 +11,7 @@ import {
   CreateBussinessDto,
   UpdateBussinessDto,
   FindNearBussinessDto,
+  ExtraBussinessInfoDto,
 } from './dto';
 
 @Injectable()
@@ -48,6 +49,15 @@ export class BussinessService {
     }
   }
 
+  async addExtraBussinesInfo(id: string, extraBussinesInfoDto: ExtraBussinessInfoDto){
+    try{
+      const bussiness = await this.bussinessModel.findByIdAndUpdate(id, extraBussinesInfoDto);
+      return bussiness;
+    } catch(e){
+      throw new NotFoundException(`Bussiness not found for id: ${e}`);
+    }
+  }
+
   // encuentra un bussiness de acuerdo al ID o nombre o description
   async findBussinessByTerm(term: string) {
     let bussiness: Bussiness[] | null = null;
@@ -80,9 +90,8 @@ export class BussinessService {
   // motodo para editar un bussiness
   async update(id: string, updateBussinessDto: UpdateBussinessDto) {
     try {
-      const bussiness = await this.findOneById(id);
-      await bussiness?.updateOne(updateBussinessDto);
-      return true;
+      const bussiness = await this.bussinessModel.findByIdAndUpdate(id,updateBussinessDto);
+      return bussiness;
     } catch (error) {
       if (error instanceof Error) {
         console.log(error);
