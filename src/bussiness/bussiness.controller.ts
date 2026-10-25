@@ -35,6 +35,11 @@ export class BussinessController {
     return this.bussinessService.findOneById(id);
   }
 
+  @Get('/user/:id')
+  findOneByUserId(@Param('id') id: string) {
+    return this.bussinessService.findOneByUserId(id);
+  }
+
   @Get('/near')
   findNearBussinesses(@Body() findNearBussinessDto: FindNearBussinessDto) {
     return this.bussinessService.findNearBussiness(findNearBussinessDto);

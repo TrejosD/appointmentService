@@ -49,6 +49,15 @@ export class BussinessService {
     }
   }
 
+  async findOneByUserId(id: string){
+    try{
+      const bussiness = await this.bussinessModel.findOne({userId:id});
+      return bussiness;
+    }catch (e){
+      throw new NotFoundException(`Bussiness not found for User Id: ${id}, ${e}`)
+    }
+  }
+
   async addExtraBussinesInfo(id: string, extraBussinesInfoDto: ExtraBussinessInfoDto){
     try{
       const bussiness = await this.bussinessModel.findByIdAndUpdate(id, extraBussinesInfoDto);
