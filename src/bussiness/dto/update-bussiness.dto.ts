@@ -1,11 +1,8 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateBussinessDto } from './create-bussiness.dto';
-import { IsArray, IsOptional, IsString } from 'class-validator';
-import { Position } from '../entities/position.entity';
-import { Product } from '../entities/product.entity';
-import { SpaceTime } from '../entities/space_time.entity';
-import { Schedule } from '../entities/schedule.entity';
-import { Contact } from '../entities/contact.entity';
+import { IsOptional, IsString } from 'class-validator';
+import { CompassGPS, Position, Product, Schedule, Contact } from '../entities';
+
 
 export class UpdateBussinessDto extends PartialType(CreateBussinessDto) {
   @IsString()
@@ -17,9 +14,8 @@ export class UpdateBussinessDto extends PartialType(CreateBussinessDto) {
   @IsString()
   @IsOptional()
   address?:string;
-  @IsArray()
   @IsOptional()
-  gpsData?: string[];
+  compassGPS?: CompassGPS;
   @IsOptional()
   positions?: [Position];
   @IsOptional()
