@@ -1,5 +1,4 @@
 import { IsArray, IsPositive, IsString, MinLength, ValidateNested } from 'class-validator';
-import { Product, Schedule } from '../entities';
 import { ContactDto } from './contact.dto';
 import { Type } from 'class-transformer';
 import { ServicesDto } from './services.dto';

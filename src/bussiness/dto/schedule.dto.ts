@@ -1,11 +1,11 @@
-import { IsArray, IsString } from "class-validator";
+import { IsArray, IsNumber, IsPositive } from "class-validator";
 
 export class ScheduleDto{
     @IsArray()
-    @IsString()
-    days: string[];
-    @IsString()
-    startYourney: string;
-    @IsString()
-    endYourney: string;
+    @IsNumber()
+    days: number[];
+    @IsPositive()
+    startYourney: number;
+    @IsPositive()
+    endYourney: number;
 }
