@@ -1,6 +1,9 @@
-import { IsObject, IsPositive, IsString, MinLength } from 'class-validator';
-import { Contact } from '../entities/contact.entity';
+import { IsArray, IsPositive, IsString, MinLength, ValidateNested } from 'class-validator';
 import { Product, Schedule } from '../entities';
+import { ContactDto } from './contact.dto';
+import { Type } from 'class-transformer';
+import { ServicesDto } from './services.dto';
+import { ScheduleDto } from './schedule.dto';
 
 export class CreateBussinessDto {
   @IsString()
@@ -14,11 +17,17 @@ export class CreateBussinessDto {
   @IsString()
   @MinLength(8)
   address: string;
-  @IsObject()
-  contactInfo: {"email":string,"number":string,"social":string[]};
-  products: Product[];
+  @ValidateNested()
+  @Type(()=> ContactDto)
+  contactInfo: ContactDto ;
+  @IsArray()
+  @ValidateNested({each: true})
+  @Type(()=>ServicesDto)
+  products: ServicesDto[];
   @IsPositive()
   defaultAppointmentTime: number;
-  schedule: Schedule;
+  @ValidateNested()
+  @Type(()=>ScheduleDto)
+  schedule: ScheduleDto;
 
 }
