@@ -1,5 +1,6 @@
-import { IsString, MinLength } from 'class-validator';
+import { IsPositive, IsString, MinLength } from 'class-validator';
 import { Contact } from '../entities/contact.entity';
+import { Product, Schedule } from '../entities';
 
 export class CreateBussinessDto {
   @IsString()
@@ -14,4 +15,9 @@ export class CreateBussinessDto {
   @MinLength(8)
   address: string;
   contactInfo: Contact;
+  products: Product[];
+  @IsPositive()
+  defaultAppointmentTime: number;
+  schedule: Schedule;
+
 }
