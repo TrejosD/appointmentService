@@ -2,7 +2,7 @@ import { IsArray, IsNumber, IsPositive } from "class-validator";
 
 export class ScheduleDto{
     @IsArray()
-    @IsNumber()
+    @IsPositive()
     days: number[];
     @IsPositive()
     startYourney: number;
