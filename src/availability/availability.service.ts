@@ -27,12 +27,12 @@ import {
 export class AvailabilityService {
   constructor(
     @InjectModel(Availability.name)
-    @Inject(forwardRef(() => AppointmentService))
-    @Inject(forwardRef(() => BussinessService))
     private readonly availabilityModel: Model<AvailabilityDocument>,
     @InjectModel(Bussiness.name)
     private readonly bussinessModel: Model<BussinessDocument>,
+    @Inject(forwardRef(() => BussinessService))
     private readonly bussinessService: BussinessService,
+    @Inject(forwardRef(() => AppointmentService))
     private readonly appointmentService: AppointmentService,
     @InjectConnection()
     private readonly connection: Connection,
