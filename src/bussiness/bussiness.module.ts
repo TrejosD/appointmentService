@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { BussinessService } from './bussiness.service';
 import { BussinessController } from './bussiness.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -12,7 +12,7 @@ import { AvailabilityModule } from 'src/availability/availability.module';
       { name: Bussiness.name, schema: BussinessSchema },
       { name: Follower.name, schema: FollowerSchema },
     ]),
-    AvailabilityModule
+    forwardRef(() => AvailabilityModule)
   ],
   controllers: [BussinessController],
   providers: [BussinessService],

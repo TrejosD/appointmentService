@@ -17,7 +17,7 @@ import {
   controllers: [AvailabilityController],
   providers: [AvailabilityService],
   imports: [
-    BussinessModule,
+    forwardRef(()=> BussinessModule),
     forwardRef(() => AppointmentModule),
     MongooseModule.forFeature([
       { name: Availability.name, schema: AvailabilitySchema },

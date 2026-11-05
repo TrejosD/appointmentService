@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -18,6 +20,7 @@ import { AvailabilityService } from 'src/availability/availability.service';
 @Injectable()
 export class BussinessService {
   constructor(
+    @Inject(forwardRef(() => AvailabilityService))
     @InjectModel(Bussiness.name)
     private readonly bussinessModel: Model<BussinessDocument>,
     @InjectModel(Follower.name)
