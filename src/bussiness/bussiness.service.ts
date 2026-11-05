@@ -13,6 +13,7 @@ import {
   FindNearBussinessDto,
   ExtraBussinessInfoDto,
 } from './dto';
+import { AvailabilityService } from 'src/availability/availability.service';
 
 @Injectable()
 export class BussinessService {
@@ -21,11 +22,13 @@ export class BussinessService {
     private readonly bussinessModel: Model<BussinessDocument>,
     @InjectModel(Follower.name)
     private readonly followerModel: Model<FollowerDocument>,
+    private readonly availabilityService: AvailabilityService
   ) {}
   // crea un bussiness nuevo
-  create(createBussinessDto: CreateBussinessDto) {
+  async create(createBussinessDto: CreateBussinessDto) {
     try {
-      const bussiness = this.bussinessModel.create(createBussinessDto);
+      const bussiness = await this.bussinessModel.create(createBussinessDto);
+      this.availabilityService.populateEmptyAgendas(bussiness.id);
       return bussiness;
     } catch (error) {
       if (error instanceof Error) {
