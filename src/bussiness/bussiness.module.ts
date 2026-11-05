@@ -4,6 +4,7 @@ import { BussinessController } from './bussiness.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Bussiness, BussinessSchema } from './entities/bussiness.entity';
 import { FollowerSchema, Follower } from './entities/follower.entity';
+import { AvailabilityModule } from 'src/availability/availability.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { FollowerSchema, Follower } from './entities/follower.entity';
       { name: Bussiness.name, schema: BussinessSchema },
       { name: Follower.name, schema: FollowerSchema },
     ]),
+    AvailabilityModule
   ],
   controllers: [BussinessController],
   providers: [BussinessService],
