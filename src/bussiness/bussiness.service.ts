@@ -31,7 +31,7 @@ export class BussinessService {
   async create(createBussinessDto: CreateBussinessDto) {
     try {
       const bussiness = await this.bussinessModel.create(createBussinessDto);
-      this.availabilityService.populateEmptyAgendas(bussiness.id);
+      // this.availabilityService.populateEmptyAgendas(bussiness.id);
       return bussiness;
     } catch (error) {
       if (error instanceof Error) {
