@@ -24,14 +24,14 @@ export class BussinessService {
     private readonly bussinessModel: Model<BussinessDocument>,
     @InjectModel(Follower.name)
     private readonly followerModel: Model<FollowerDocument>,
-    // @Inject(forwardRef(() => AvailabilityService))
-    // private readonly availabilityService: AvailabilityService
+    @Inject(forwardRef(() => AvailabilityService))
+    private readonly availabilityService: AvailabilityService
   ) {}
   // crea un bussiness nuevo
   async create(createBussinessDto: CreateBussinessDto) {
     try {
       const bussiness = await this.bussinessModel.create(createBussinessDto);
-      // this.availabilityService.populateEmptyAgendas(bussiness.id);
+      this.availabilityService.populateEmptyAgendas(bussiness.id);
       return bussiness;
     } catch (error) {
       if (error instanceof Error) {
