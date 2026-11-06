@@ -20,12 +20,12 @@ import { AvailabilityService } from 'src/availability/availability.service';
 @Injectable()
 export class BussinessService {
   constructor(
-    @Inject(forwardRef(() => AvailabilityService))
     @InjectModel(Bussiness.name)
     private readonly bussinessModel: Model<BussinessDocument>,
     @InjectModel(Follower.name)
     private readonly followerModel: Model<FollowerDocument>,
-    private readonly availabilityService: AvailabilityService
+    // @Inject(forwardRef(() => AvailabilityService))
+    // private readonly availabilityService: AvailabilityService
   ) {}
   // crea un bussiness nuevo
   async create(createBussinessDto: CreateBussinessDto) {
