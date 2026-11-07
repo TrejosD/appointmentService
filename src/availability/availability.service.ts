@@ -115,6 +115,13 @@ export class AvailabilityService {
       .sort({ dayDate: 1 });
     return allAvas;
   }
+
+  //metodo busca el availability de un buss para un unico dia.
+  async findAvaByBussNDate(id: string, date: string){
+    const ava = await this.availabilityModel.find({bussinessID: id, dayDate:date});
+    return ava;
+  }
+  
   // metodo retorna todos los espacios availability
   async findAll() {
     const ava = await this.availabilityModel.find({});

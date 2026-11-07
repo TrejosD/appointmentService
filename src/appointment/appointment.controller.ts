@@ -11,6 +11,7 @@ import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id/parse-mongo-id.pipe';
+import { CreateAppByBussDto } from './dto/create_by_buss-appointment.dto';
 
 @Controller('appointment')
 export class AppointmentController {
@@ -22,6 +23,14 @@ export class AppointmentController {
     @Body() createAppointmentDto: CreateAppointmentDto,
   ) {
     return this.appointmentService.create(id, createAppointmentDto);
+  }
+
+  @Post('/bussiness/:id')
+  createByBuss(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @Body() createByBuss: CreateAppByBussDto,
+  ) {
+    return this.appointmentService.createByBuss(id, createByBuss);
   }
 
   @Get()
@@ -38,14 +47,6 @@ export class AppointmentController {
   findByUserId(@Param('id', ParseMongoIdPipe) id: string) {
     return this.appointmentService.findOneByUserId(id);
   }
-
-  // @Patch('release/:id')
-  // freeAppointmentSpace(
-  //   @Param('id', ParseMongoIdPipe) id: string,
-  //   appointment: Appointment,
-  // ) {
-  //   return this.appointmentService.freeAppointmentSpace(id, appointment);
-  // }
 
   @Patch('/:id')
   update(

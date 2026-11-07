@@ -15,6 +15,7 @@ import {
 } from './entities/appointment.entity';
 import { Model, isValidObjectId } from 'mongoose';
 import { AvailabilityService } from 'src/availability/availability.service';
+import { CreateAppByBussDto } from './dto/create_by_buss-appointment.dto';
 
 @Injectable()
 export class AppointmentService {
@@ -48,6 +49,27 @@ export class AppointmentService {
           throw new ConflictException(error.message);
         }
       }
+    }
+  }
+
+   getDayMonth = (date: Date): string => { 
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth()+1).padStart(2,'0');
+    return `${day}-${month}`;
+  };
+
+  getTime = (date: Date):string =>{
+    return date.toISOString().slice(11,16);
+  }
+
+  async createByBuss(bussId: string, createByBuss: CreateAppByBussDto) {
+    // primero buscar el ava
+    //luego buscar el sloth, y luego crear el app
+    const avaList = await this.availabilityService.findAvaByBussID(bussId);
+    const ava = avaList.find((item) => this.getDayMonth(new Date(item.dayDate)) === createByBuss.dayDate);
+    if(ava){
+      const slot = ava.slots.find((slot)=> this.getTime(new Date(slot.startTime)) == createByBuss.startTime);
+      await this.create(ava.id, {bussinessID: bussId, customerID: createByBuss.customerID, slothID: slot!._id.toString(), productID: createByBuss.productID, dayDate: ava.dayDate, startTime: slot!.startTime});
     }
   }
   // metodo retorna todas las citas. appointment
