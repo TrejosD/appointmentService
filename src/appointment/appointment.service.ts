@@ -70,7 +70,7 @@ export class AppointmentService {
     const ava = avaList.find((item) => {console.log('-----COMPARACION FECHAS------');
       console.log(this.getDayMonth(new Date(item.dayDate)));
       console.log(createByBuss.dayDate);
-      this.getDayMonth(new Date(item.dayDate)) === createByBuss.dayDate;})
+      this.getDayMonth(new Date(item.dayDate)) == createByBuss.dayDate;})
 
     if(!ava){
       return 'availability no encontrado';
