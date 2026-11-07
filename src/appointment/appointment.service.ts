@@ -64,6 +64,9 @@ export class AppointmentService {
 //ese metodo busca crear un appointment desde el bussId
   async createByBuss(bussId: string, createByBuss: CreateAppByBussDto) {
     const avaList = await this.availabilityService.findAvaByBussID(bussId);
+    if(!avaList){
+      return 'availability LIST no encontrado'
+    }
     const ava = avaList.find((item) => this.getDayMonth(new Date(item.dayDate)) === createByBuss.dayDate);
     if(ava){
       const slot = ava.slots.find((slot)=> this.getTime(new Date(slot.startTime)) == createByBuss.startTime);
