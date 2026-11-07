@@ -67,13 +67,17 @@ export class AppointmentService {
     if(!avaList){
       return 'availability LIST no encontrado'
     }
-    const ava = avaList.find((item) => this.getDayMonth(new Date(item.dayDate)) === createByBuss.dayDate);
-    if(ava){
-      const slot = ava.slots.find((slot)=> this.getTime(new Date(slot.startTime)) == createByBuss.startTime);
+    const ava = avaList.find((item) => {console.log('-----COMPARACION FECHAS------');
+      console.log(this.getDayMonth(new Date(item.dayDate)));
+      console.log(createByBuss.dayDate);
+      this.getDayMonth(new Date(item.dayDate)) === createByBuss.dayDate;})
+
+    if(!ava){
+      return 'availability no encontrado';
+    }
+    const slot = ava.slots.find((slot)=> this.getTime(new Date(slot.startTime)) == createByBuss.startTime);
       const space = await this.create(ava.id, {bussinessID: bussId, customerID: createByBuss.customerID, slothID: slot!._id.toString(), productID: createByBuss.productID, dayDate: ava.dayDate, startTime: slot!.startTime});
       return space;
-    }
-    return 'availability no encontrado';
   }
   // metodo retorna todas las citas. appointment
   async findAll() {
