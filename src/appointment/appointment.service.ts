@@ -78,6 +78,8 @@ export class AppointmentService {
       console.log(this.getTime(new Date(slot.startTime)));
       console.log(createByBuss.startTime);
       this.getTime(new Date(slot.startTime)) == createByBuss.startTime});
+      console.log('-----SLOTH----S-----');
+    console.log(slot);
     
 
     if(!slot){
