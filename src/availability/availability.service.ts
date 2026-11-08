@@ -122,10 +122,15 @@ export class AvailabilityService {
     return `${day}-${month}`;
   };
 
+  formatDate = (date: string):string => {
+    const [day, month] = date.split(':');
+    return `${day.padStart(2,'0')}:${month.padStart(2,'0')}`;
+  }
+
   //metodo busca el availability de un buss para un unico dia.
   async findAvaByBussNDate(id: string, date: string){
       const avaList = await this.availabilityModel.find({bussinessID: id});
-    const ava = avaList.find((ava) => this.getDayMonth(new Date(ava.dayDate)) == date);
+    const ava = avaList.find((ava) => this.getDayMonth(new Date(ava.dayDate)) === this.formatDate(date));
     return ava;
   }
   
