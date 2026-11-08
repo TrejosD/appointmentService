@@ -55,6 +55,11 @@ export class AppointmentService {
   getTime = (date: Date):string =>{
     return date.toISOString().slice(11,16);
   }
+
+  formatTime = (time: string):string => {
+    const [hours, minutes] = time.split(':');
+    return `${hours.padStart(2,'0')}:${minutes.padStart(2,'0')}`;
+  }
 //ese metodo busca crear un appointment desde el bussId
   async createByBuss(bussId: string, createByBuss: CreateAppByBussDto) {
     const ava = await this.availabilityService.findAvaByBussNDate(bussId, createByBuss.dayDate);
@@ -62,13 +67,11 @@ export class AppointmentService {
       return 'availability no encontrado';
     }
     const slot = ava.slots.find((slot) => {
-      console.log('-----REVISANDO FECHAS-----');
-      console.log(this.getTime(new Date(slot.startTime)));
-      console.log(createByBuss.startTime);
-      return this.getTime(new Date(slot.startTime)) == createByBuss.startTime});
-
-   
-      const space = await this.create(ava.id, {bussinessID: bussId, customerID: createByBuss.customerID, slothID: slot!._id.toString(), productID: createByBuss.productID, dayDate: ava.dayDate, startTime: slot!.startTime});
+      return this.getTime(new Date(slot.startTime)) === this.formatTime(createByBuss.startTime)});
+    if(!slot){
+      return 'Sloth no encontrado';
+    }
+      const space = await this.create(ava.id, {bussinessID: bussId, customerID: createByBuss.customerID, slothID: slot._id.toString(), productID: createByBuss.productID, dayDate: ava.dayDate, startTime: slot!.startTime});
       return space;
   }
   // metodo retorna todas las citas. appointment
