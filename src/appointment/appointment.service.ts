@@ -73,7 +73,13 @@ export class AppointmentService {
     if(!ava){
       return 'availability no encontrado';
     }
-    const slot = ava.slots.find((slot)=> this.getTime(new Date(slot.startTime)) == createByBuss.startTime);
+    const slot = ava.slots.find((slot) => {
+      console.log('-----REVISANDO FECHAS-----');
+      console.log(this.getTime(new Date(slot.startTime)));
+      console.log(createByBuss.startTime);
+      this.getTime(new Date(slot.startTime)) == createByBuss.startTime});
+    
+
     if(!slot){
       return 'sloth not found';
     }
