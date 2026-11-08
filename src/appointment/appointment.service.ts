@@ -74,7 +74,10 @@ export class AppointmentService {
       return 'availability no encontrado';
     }
     const slot = ava.slots.find((slot)=> this.getTime(new Date(slot.startTime)) == createByBuss.startTime);
-      const space = await this.create(ava.id, {bussinessID: bussId, customerID: createByBuss.customerID, slothID: slot!._id.toString(), productID: createByBuss.productID, dayDate: ava.dayDate, startTime: slot!.startTime});
+    if(!slot){
+      return 'sloth not found';
+    }
+      const space = await this.create(ava.id, {bussinessID: bussId, customerID: createByBuss.customerID, slothID: slot._id.toString(), productID: createByBuss.productID, dayDate: ava.dayDate, startTime: slot!.startTime});
       return space;
   }
   // metodo retorna todas las citas. appointment
