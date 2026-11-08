@@ -52,8 +52,6 @@ export class AppointmentService {
     }
   }
 
-   
-
   getTime = (date: Date):string =>{
     return date.toISOString().slice(11,16);
   }
@@ -63,15 +61,12 @@ export class AppointmentService {
     if(!ava){
       return 'availability no encontrado';
     }
-
-    const sloths = ava.slots;
-    const slot = sloths.find((slot) => {
+    const slot = ava.slots.find((slot) => {
       console.log('-----REVISANDO FECHAS-----');
       console.log(this.getTime(new Date(slot.startTime)));
       console.log(createByBuss.startTime);
-      this.getTime(new Date(slot.startTime)) == createByBuss.startTime});
-      console.log('-----SLOTH----S-----');
-    console.log(slot);
+      return this.getTime(new Date(slot.startTime)) == createByBuss.startTime});
+
    
       const space = await this.create(ava.id, {bussinessID: bussId, customerID: createByBuss.customerID, slothID: slot!._id.toString(), productID: createByBuss.productID, dayDate: ava.dayDate, startTime: slot!.startTime});
       return space;
