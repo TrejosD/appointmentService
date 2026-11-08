@@ -123,8 +123,8 @@ export class AvailabilityService {
   };
 
   formatDate = (date: string):string => {
-    const [day, month] = date.split(':');
-    return `${day.padStart(2,'0')}:${month.padStart(2,'0')}`;
+    const [day, month] = date.split('-');
+    return `${day.padStart(2, '0')}-${month.padStart(2, '0')}`;
   }
 
   //metodo busca el availability de un buss para un unico dia.
