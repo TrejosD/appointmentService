@@ -116,9 +116,16 @@ export class AvailabilityService {
     return allAvas;
   }
 
+  getDayMonth = (date: Date): string => { 
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth()+1).padStart(2,'0');
+    return `${day}-${month}`;
+  };
+
   //metodo busca el availability de un buss para un unico dia.
   async findAvaByBussNDate(id: string, date: string){
-    const ava = await this.availabilityModel.find({bussinessID: id, dayDate:date});
+      const avaList = await this.availabilityModel.find({bussinessID: id});
+    const ava = avaList.find((ava) => this.getDayMonth(new Date(ava.dayDate)) == date);
     return ava;
   }
   

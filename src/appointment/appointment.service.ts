@@ -52,24 +52,14 @@ export class AppointmentService {
     }
   }
 
-   getDayMonth = (date: Date): string => { 
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth()+1).padStart(2,'0');
-    return `${day}-${month}`;
-  };
+   
 
   getTime = (date: Date):string =>{
     return date.toISOString().slice(11,16);
   }
 //ese metodo busca crear un appointment desde el bussId
   async createByBuss(bussId: string, createByBuss: CreateAppByBussDto) {
-    const avaList = await this.availabilityService.findAvaByBussID(bussId);
-    if(!avaList){
-      return 'availability LIST no encontrado'
-    }
-    const ava = avaList.find((item) => 
-      this.getDayMonth(new Date(item.dayDate)) == createByBuss.dayDate);
-
+    const ava = await this.availabilityService.findAvaByBussNDate(bussId, createByBuss.dayDate);
     if(!ava){
       return 'availability no encontrado';
     }
@@ -80,12 +70,8 @@ export class AppointmentService {
       this.getTime(new Date(slot.startTime)) == createByBuss.startTime});
       console.log('-----SLOTH----S-----');
     console.log(slot);
-    
-
-    if(!slot){
-      return 'sloth not found';
-    }
-      const space = await this.create(ava.id, {bussinessID: bussId, customerID: createByBuss.customerID, slothID: slot._id.toString(), productID: createByBuss.productID, dayDate: ava.dayDate, startTime: slot!.startTime});
+   
+      const space = await this.create(ava.id, {bussinessID: bussId, customerID: createByBuss.customerID, slothID: slot!._id.toString(), productID: createByBuss.productID, dayDate: ava.dayDate, startTime: slot!.startTime});
       return space;
   }
   // metodo retorna todas las citas. appointment
