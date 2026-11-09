@@ -65,12 +65,12 @@ export class AppointmentService {
     try {
       const ava = await this.availabilityService.findAvaByBussNDate(bussId, createByBuss.dayDate);
     if(!ava){
-      return new NotFoundException('availability no encontrado');
+      throw new NotFoundException('availability no encontrado');
     }
     const slot = ava.slots.find((slot) => {
       return this.getTime(new Date(slot.startTime)) === this.formatTime(createByBuss.startTime)});
     if(!slot){
-      return new NotFoundException('Sloth no encontrado');
+      throw new NotFoundException('Sloth no encontrado');
     }
       const space = await this.create(ava.id, {bussinessID: bussId, customerID: createByBuss.customerID, slothID: slot._id.toString(), productID: createByBuss.productID, dayDate: ava.dayDate, startTime: slot!.startTime});
       return space;
