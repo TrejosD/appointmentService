@@ -62,7 +62,8 @@ export class AppointmentService {
   }
 //ese metodo busca crear un appointment desde el bussId
   async createByBuss(bussId: string, createByBuss: CreateAppByBussDto) {
-    const ava = await this.availabilityService.findAvaByBussNDate(bussId, createByBuss.dayDate);
+    try {
+      const ava = await this.availabilityService.findAvaByBussNDate(bussId, createByBuss.dayDate);
     if(!ava){
       return new NotFoundException('availability no encontrado');
     }
@@ -73,6 +74,11 @@ export class AppointmentService {
     }
       const space = await this.create(ava.id, {bussinessID: bussId, customerID: createByBuss.customerID, slothID: slot._id.toString(), productID: createByBuss.productID, dayDate: ava.dayDate, startTime: slot!.startTime});
       return space;
+    } catch (error) {
+      if(error instanceof Error)
+      throw new NotFoundException(error.message);
+    }
+    
   }
   // metodo retorna todas las citas. appointment
   async findAll() {
