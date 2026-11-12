@@ -105,7 +105,7 @@ export class BussinessService {
   // motodo para editar un bussiness
   async update(id: string, updateBussinessDto: UpdateBussinessDto) {
     try {
-      const bussiness = await this.bussinessModel.findByIdAndUpdate(id,updateBussinessDto);
+      const bussiness = await this.bussinessModel.findByIdAndUpdate({_id:id,updateBussinessDto});
       return bussiness;
     } catch (error) {
       if (error instanceof Error) {
