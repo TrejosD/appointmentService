@@ -16,6 +16,8 @@ export class CreateBussinessDto {
   @IsString()
   @MinLength(8)
   address: string;
+  @IsString()
+  compassGPS: number[]
   @ValidateNested()
   @Type(()=> ContactDto)
   contactInfo: ContactDto ;
