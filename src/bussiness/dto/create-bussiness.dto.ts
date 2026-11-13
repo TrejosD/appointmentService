@@ -3,7 +3,6 @@ import { ContactDto } from './contact.dto';
 import { Type } from 'class-transformer';
 import { ServicesDto } from './services.dto';
 import { ScheduleDto } from './schedule.dto';
-import { CompassGPS } from '../entities';
 import { CompassGpsDto } from './compass-gps.dto';
 
 export class CreateBussinessDto {
@@ -19,14 +18,14 @@ export class CreateBussinessDto {
   @MinLength(8)
   address: string;
   @ValidateNested()
-  @Type(()=> CompassGpsDto)
+  @Type(() => CompassGpsDto)
   compassGPS: CompassGpsDto;
   @ValidateNested()
-  @Type(()=> ContactDto)
-  contactInfo: ContactDto ;
+  @Type(() => ContactDto)
+  contactInfo: ContactDto;
   @IsArray()
   @ValidateNested({each: true})
-  @Type(()=>ServicesDto)
+  @Type(() =>ServicesDto)
   products: ServicesDto[];
   @IsPositive()
   defaultAppointmentTime: number;
