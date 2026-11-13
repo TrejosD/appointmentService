@@ -30,7 +30,7 @@ export class BussinessService {
   // crea un bussiness nuevo
   async create(createBussinessDto: CreateBussinessDto) {
     try {
-      const bussiness = await this.bussinessModel.create(createBussiness);
+      const bussiness = await this.bussinessModel.create(createBussinessDto);
       this.availabilityService.populateEmptyAgendas(bussiness.id);
       return bussiness;
     } catch (error) {
