@@ -4,6 +4,7 @@ import { Type } from 'class-transformer';
 import { ServicesDto } from './services.dto';
 import { ScheduleDto } from './schedule.dto';
 import { CompassGPS } from '../entities';
+import { CompassGpsDto } from './compass-gps.dto';
 
 export class CreateBussinessDto {
   @IsString()
@@ -17,7 +18,9 @@ export class CreateBussinessDto {
   @IsString()
   @MinLength(8)
   address: string;
-  compassGPS: CompassGPS;
+  @ValidateNested()
+  @Type(()=> CompassGpsDto)
+  compassGPS: CompassGpsDto;
   @ValidateNested()
   @Type(()=> ContactDto)
   contactInfo: ContactDto ;
