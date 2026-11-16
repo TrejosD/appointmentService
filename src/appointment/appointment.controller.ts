@@ -43,6 +43,12 @@ export class AppointmentController {
     return this.appointmentService.findOne(id);
   }
 
+  @Get('/info/:id')
+  findCustomerInfo(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.appointmentService.findCustomerInfo(id);
+  }
+
+
   @Get('/user/:id')
   findByUserId(@Param('id', ParseMongoIdPipe) id: string) {
     return this.appointmentService.findOneByUserId(id);

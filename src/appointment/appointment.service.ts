@@ -16,6 +16,8 @@ import {
 import { Model, isValidObjectId } from 'mongoose';
 import { AvailabilityService } from 'src/availability/availability.service';
 import { CreateAppByBussDto } from './dto/create_by_buss-appointment.dto';
+import { AuthService } from 'src/auth/auth.service';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class AppointmentService {
@@ -24,6 +26,7 @@ export class AppointmentService {
     private readonly appointmentModel: Model<AppointmentDocument>,
     @Inject(forwardRef(() => AvailabilityService))
     private readonly availabilityService: AvailabilityService,
+    private readonly authService: AuthService,
   ) {}
   // metodo agenda una cita, en el espacio ID seleccionado "AvailabilitySpace". **Si el producto, necesita un tiempo mayor a un solo sloth de tiempo, agenda el siguiente espacio automaticamente si esta disponible, sino, error.
   async create(id: string, createAppointmentDto: CreateAppointmentDto) {
@@ -84,6 +87,25 @@ export class AppointmentService {
   async findAll() {
     const allApp = await this.appointmentModel.find({});
     return allApp;
+  }
+
+  async findCustomerInfo(id: string){
+    let user: User | null = null;
+    try{
+      const app = await this.appointmentModel.findById(id);
+    if(app != null){
+      user = await this.authService.getUserById(app?.customerID);
+    }
+    if(user != null){
+      const fullName = user.fullName;
+      const userId = user._id;
+      const productId = app?.productID;
+      return {fullName, userId, productId};
+    }
+    }catch (e){
+      throw new NotFoundException(`User not found: ${e}`)
+    }
+    
   }
 
   // metodo retorna una cita, de acuerdo al ID
