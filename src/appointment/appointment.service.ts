@@ -18,6 +18,7 @@ import { AvailabilityService } from 'src/availability/availability.service';
 import { CreateAppByBussDto } from './dto/create_by_buss-appointment.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/auth/entities/user.entity';
+import { BussinessService } from 'src/bussiness/bussiness.service';
 
 @Injectable()
 export class AppointmentService {
@@ -27,14 +28,19 @@ export class AppointmentService {
     @Inject(forwardRef(() => AvailabilityService))
     private readonly availabilityService: AvailabilityService,
     private readonly authService: AuthService,
+    private readonly bussService: BussinessService,
   ) {}
   // metodo agenda una cita, en el espacio ID seleccionado "AvailabilitySpace". **Si el producto, necesita un tiempo mayor a un solo sloth de tiempo, agenda el siguiente espacio automaticamente si esta disponible, sino, error.
   async create(id: string, createAppointmentDto: CreateAppointmentDto) {
     const newApp = await this.appointmentModel.create(createAppointmentDto);
+    const  userInfo = await this.findCustomerInfo(id);
+    const serviceName = await this.bussService.findProductByID( createAppointmentDto.bussinessID,createAppointmentDto.productID);
+    if(!userInfo || !serviceName) throw new NotFoundException('User information needed not found');
     try {
       const spaceUpdated = await this.availabilityService.updateAppointment(
         id,
         newApp,
+        userInfo.fullName,userInfo.userId,userInfo.productId!, serviceName.name,
       );
       // todo aca deberia enviar la notificacion que se agendo la cita
       // tengo el bussinessID, deberia de tener un ligamen de que user es dueño del bussiness o algo asi, para tomar los pushTOken
@@ -98,7 +104,7 @@ export class AppointmentService {
     }
     if(user != null){
       const fullName = user.fullName;
-      const userId = user._id;
+      const userId = user._id.toString();
       const productId = app?.productID;
       return {fullName, userId, productId};
     }

@@ -227,7 +227,7 @@ export class AvailabilityService {
     }
   }
   // metodo actualiza un espacio de agenda para cita
-  async updateAppointment(id: string, appointment: Appointment) {
+  async updateAppointment(id: string, appointment: Appointment, fullName: string, userId: string, productId: string, serviceName: string) {
     console.log('UpdateAppointment');
     const product = await this.bussinessService.findProductByID(
       appointment.bussinessID,
@@ -236,7 +236,7 @@ export class AvailabilityService {
     if (!product) {
       throw new NotFoundException(`Product not found`);
     }
-    const newApp = await this.updateAgendaSpace(appointment, product.time, id);
+    const newApp = await this.updateAgendaSpace(appointment, product.time, id, fullName, userId, productId, serviceName);
     return newApp;
   }
   // metodo elimina un espacio de availability.
@@ -251,7 +251,7 @@ export class AvailabilityService {
     return `Removed - true`;
   }
   // metodo selecciona el espacios availability y lo convierte en un appointment. Tomando los espacios necesarios de acuerdo al tiempo.
-  async updateAgendaSpace(appointment: Appointment, time: number, id: string) {
+  async updateAgendaSpace(appointment: Appointment, time: number, id: string, fullName: string, userId: string, productId: string, serviceName: string) {
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
@@ -282,6 +282,7 @@ export class AvailabilityService {
         item.isAvailable = false;
         item.endTime = new Date(startTime + neededTime * 60000);
         item.reservationId = appointment._id.toString();
+        item.reservationInfo = {fullName, userId, productId, serviceName}
       });
       ava.markModified('slots');
       await ava?.save({ session });
