@@ -15,8 +15,8 @@ import { BussinessModule } from 'src/bussiness/bussiness.module';
     MongooseModule.forFeature([
       { name: Appointment.name, schema: AppointmentSchema },
     ]),
+    BussinessModule,
     AuthModule,
-    BussinessModule
   ],
   exports: [AppointmentService],
 })

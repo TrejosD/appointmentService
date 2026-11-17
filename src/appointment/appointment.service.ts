@@ -17,8 +17,8 @@ import { Model, isValidObjectId } from 'mongoose';
 import { AvailabilityService } from 'src/availability/availability.service';
 import { CreateAppByBussDto } from './dto/create_by_buss-appointment.dto';
 import { AuthService } from 'src/auth/auth.service';
-import { User } from 'src/auth/entities/user.entity';
 import { BussinessService } from 'src/bussiness/bussiness.service';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class AppointmentService {
