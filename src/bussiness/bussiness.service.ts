@@ -132,8 +132,6 @@ export class BussinessService {
   // buscar un producto en un bussiness
   async findProductByID(id: string, productId: string) {
     const buss = await this.findOneById(id);
-    console.log(id);
-    console.log(productId);
     if(!buss){
       throw new NotFoundException('Bussiness not found');
     }
@@ -141,7 +139,6 @@ export class BussinessService {
       // eslint-disable-next-line @typescript-eslint/no-base-to-string
       (item) => item._id!.toString() === productId,
     );
-    console.log(product);
     if(!product){
       throw new NotFoundException('Product not found');
     }

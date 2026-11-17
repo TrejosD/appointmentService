@@ -34,7 +34,7 @@ export class AppointmentService {
   // metodo agenda una cita, en el espacio ID seleccionado "AvailabilitySpace". **Si el producto, necesita un tiempo mayor a un solo sloth de tiempo, agenda el siguiente espacio automaticamente si esta disponible, sino, error.
   async create(id: string, createAppointmentDto: CreateAppointmentDto) {
     const newApp = await this.appointmentModel.create(createAppointmentDto);
-    const  userInfo = await this.findCustomerInfo(id);
+    const userInfo = await this.findCustomerInfo(id);
     const serviceName = await this.bussService.findProductByID(createAppointmentDto.bussinessID,createAppointmentDto.productID);
     if(!userInfo){ throw new NotFoundException('User information needed not found');}
     if(!serviceName) {throw new NotFoundException('Service Name not found');}
@@ -101,15 +101,21 @@ export class AppointmentService {
     let user: User | null = null;
     try{
       const app = await this.appointmentModel.findById(id);
+      console.log(app);
     if(app != null){
-      user = await this.authService.getUserById(app?.customerID);
+      user = await this.authService.getUserById(app.customerID);
+      console.log(user);
     }
-    if(user != null){
-      const fullName = user.fullName;
-      const userId = user._id.toString();
+
+      const fullName = user!.fullName;
+      const userId = user!._id.toString();
       const productId = app?.productID;
+      console.log(
+          {fullName, userId, productId}
+      );
       return {fullName, userId, productId};
-    }
+
+    
     }catch (e){
       throw new NotFoundException(`User not found: ${e}`)
     }
