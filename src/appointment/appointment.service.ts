@@ -103,6 +103,7 @@ export class AppointmentService {
       const app = await this.appointmentModel.findById(id);
       console.log(app);
     if(app != null){
+      console.log(app.customerID);
       user = await this.authService.getUserById(app.customerID);
       console.log(user);
     }

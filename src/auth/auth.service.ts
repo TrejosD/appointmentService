@@ -85,6 +85,7 @@ export class AuthService {
 
   async getUserById(id: string) {
     const user = await this.userModel.findById(id);
+    console.log(user);
     return user;
   }
 }
