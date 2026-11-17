@@ -34,15 +34,14 @@ export class AppointmentService {
   // metodo agenda una cita, en el espacio ID seleccionado "AvailabilitySpace". **Si el producto, necesita un tiempo mayor a un solo sloth de tiempo, agenda el siguiente espacio automaticamente si esta disponible, sino, error.
   async create(id: string, createAppointmentDto: CreateAppointmentDto) {
     const newApp = await this.appointmentModel.create(createAppointmentDto);
-    const userInfo = await this.findCustomerInfo(id);
+    const user = await this.authService.getUserById(createAppointmentDto.customerID);
     const serviceName = await this.bussService.findProductByID(createAppointmentDto.bussinessID,createAppointmentDto.productID);
-    if(!userInfo){ throw new NotFoundException('User information needed not found');}
-    if(!serviceName) {throw new NotFoundException('Service Name not found');}
+    console.log(user);
     try {
       const spaceUpdated = await this.availabilityService.updateAppointment(
         id,
         newApp,
-        userInfo.fullName,userInfo.userId,userInfo.productId!, serviceName.name,
+        user!.fullName,createAppointmentDto.customerID,createAppointmentDto.productID, serviceName.name,
       );
       // todo aca deberia enviar la notificacion que se agendo la cita
       // tengo el bussinessID, deberia de tener un ligamen de que user es dueño del bussiness o algo asi, para tomar los pushTOken
@@ -97,6 +96,7 @@ export class AppointmentService {
     return allApp;
   }
 
+  //si funciona este metodo ya no seria necesario
   async findCustomerInfo(id: string){
     let user: User | null = null;
     try{
