@@ -7,6 +7,7 @@ import { AvailabilityModule } from 'src/availability/availability.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { BussinessModule } from 'src/bussiness/bussiness.module';
 
+
 @Module({
   controllers: [AppointmentController],
   providers: [AppointmentService],
@@ -15,7 +16,7 @@ import { BussinessModule } from 'src/bussiness/bussiness.module';
     MongooseModule.forFeature([
       { name: Appointment.name, schema: AppointmentSchema },
     ]),
-    BussinessModule,
+    forwardRef(()=>  BussinessModule),
     AuthModule,
   ],
   exports: [AppointmentService],
