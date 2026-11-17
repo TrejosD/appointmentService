@@ -141,6 +141,7 @@ export class BussinessService {
       // eslint-disable-next-line @typescript-eslint/no-base-to-string
       (item) => item._id!.toString() === productId,
     );
+    console.log(product);
     if(!product){
       throw new NotFoundException('Product not found');
     }
