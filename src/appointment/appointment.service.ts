@@ -28,6 +28,7 @@ export class AppointmentService {
     @Inject(forwardRef(() => AvailabilityService))
     private readonly availabilityService: AvailabilityService,
     private readonly authService: AuthService,
+    @Inject(forwardRef(() => BussinessService))
     private readonly bussService: BussinessService,
   ) {}
   // metodo agenda una cita, en el espacio ID seleccionado "AvailabilitySpace". **Si el producto, necesita un tiempo mayor a un solo sloth de tiempo, agenda el siguiente espacio automaticamente si esta disponible, sino, error.
