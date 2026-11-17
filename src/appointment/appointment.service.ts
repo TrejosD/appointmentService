@@ -36,7 +36,8 @@ export class AppointmentService {
     const newApp = await this.appointmentModel.create(createAppointmentDto);
     const  userInfo = await this.findCustomerInfo(id);
     const serviceName = await this.bussService.findProductByID( createAppointmentDto.bussinessID,createAppointmentDto.productID);
-    if(!userInfo || !serviceName) throw new NotFoundException('User information needed not found');
+    if(!userInfo) throw new NotFoundException('User information needed not found');
+    if(!serviceName) throw new NotFoundException('Service Name not found');
     try {
       const spaceUpdated = await this.availabilityService.updateAppointment(
         id,
