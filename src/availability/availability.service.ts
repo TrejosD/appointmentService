@@ -271,6 +271,16 @@ export class AvailabilityService {
       if (blocksNeeded <= 1) {
         blocksNeeded = 1;
       }
+      console.log('-----SLOTS-----**');
+      console.log(slots);
+      console.log('-----STARTTIME-----**');
+      console.log(startTime);
+      console.log('-----TIME-----**');
+      console.log(neededTime);
+      console.log('-----TIME FOR DATE-----**');
+      console.log(timeForDate);
+      console.log('-----BLOCK NEEDED-----**');
+      console.log(blocksNeeded);
       const spaceTime = this.getConsecutiveSlots(
         slots,
         startTime,
@@ -332,7 +342,8 @@ export class AvailabilityService {
     const slots = agenda.slice(startIndex, startIndex + blocksNeeded);
     // si no tenemos los espacios necesarios. null
     if (slots.length !== blocksNeeded) return null;
-    // todo salio bien, creo una lista con los slots necesarios para la cita.
+    console.log('--------SLOTS SLICED-----**');
+    console.log(slots);
     const consecutive = slots.every((slot, index) => {
       // esto debe darnos BadRequest, cuando apartir de segun espacio No esta disponible.
       if (!slot.isAvailable && index !== 0) {
