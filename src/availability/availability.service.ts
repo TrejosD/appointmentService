@@ -271,16 +271,6 @@ export class AvailabilityService {
       if (blocksNeeded <= 1) {
         blocksNeeded = 1;
       }
-      console.log('-----SLOTS-----**');
-      console.log(slots);
-      console.log('-----STARTTIME-----**');
-      console.log(startTime);
-      console.log('-----TIME-----**');
-      console.log(neededTime);
-      console.log('-----TIME FOR DATE-----**');
-      console.log(timeForDate);
-      console.log('-----BLOCK NEEDED-----**');
-      console.log(blocksNeeded);
       const spaceTime = this.getConsecutiveSlots(
         slots,
         startTime,
@@ -336,6 +326,8 @@ export class AvailabilityService {
       (item) =>
         new Date(item.startTime).getTime() === new Date(startTime).getTime(),
     );
+    console.log('---------START - INDEX---------**');
+    console.log(startIndex);
     // si el index es -1, no existe. null
     if (startIndex === -1) return null;
     // creo una lista nueva con los espacios necesarios para la cita
