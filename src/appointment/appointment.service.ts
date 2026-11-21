@@ -36,15 +36,13 @@ export class AppointmentService {
     const newApp = await this.appointmentModel.create(createAppointmentDto);
     const user = await this.authService.getUserById(createAppointmentDto.customerID);
     const serviceName = await this.bussService.findProductByID(createAppointmentDto.bussinessID,createAppointmentDto.productID);
-    console.log(user);
     try {
       const spaceUpdated = await this.availabilityService.updateAppointment(
         id,
         newApp,
         user!.fullName,createAppointmentDto.customerID,createAppointmentDto.productID, serviceName.name,
       );
-      // todo aca deberia enviar la notificacion que se agendo la cita
-      // tengo el bussinessID, deberia de tener un ligamen de que user es dueño del bussiness o algo asi, para tomar los pushTOken
+      console.log(spaceUpdated);
       return spaceUpdated;
     } catch (error) {
       await this.remove(newApp._id.toString());
