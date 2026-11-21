@@ -332,6 +332,9 @@ export class AvailabilityService {
     if (startIndex === -1) return null;
     // creo una lista nueva con los espacios necesarios para la cita
     const slots = agenda.slice(startIndex, startIndex + blocksNeeded);
+    console.log('---------slots LENGTH----***');
+    console.log(slots.length);
+    console.log(blocksNeeded);
     // si no tenemos los espacios necesarios. null
     if (slots.length !== blocksNeeded) return null;
     console.log('--------SLOTS SLICED-----**');
