@@ -34,14 +34,8 @@ export class AppointmentService {
   // metodo agenda una cita, en el espacio ID seleccionado "AvailabilitySpace". **Si el producto, necesita un tiempo mayor a un solo sloth de tiempo, agenda el siguiente espacio automaticamente si esta disponible, sino, error.
   async create(id: string, createAppointmentDto: CreateAppointmentDto) {
     const newApp = await this.appointmentModel.create(createAppointmentDto);
-    console.log('----NEWAPP RESPONSE----');
-    console.log(newApp);
     const user = await this.authService.getUserById(createAppointmentDto.customerID);
-    console.log('----USER RESPONSE----');
-    console.log(user);
     const serviceName = await this.bussService.findProductByID(createAppointmentDto.bussinessID,createAppointmentDto.productID);
-    console.log('----SERVICENAME RESPONSE----');
-    console.log(serviceName);
     try {
       const spaceUpdated = await this.availabilityService.updateAppointment(
         id,

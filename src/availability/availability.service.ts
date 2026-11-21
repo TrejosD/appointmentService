@@ -236,8 +236,6 @@ export class AvailabilityService {
       throw new NotFoundException(`Product not found`);
     }
     const newApp = await this.updateAgendaSpace(appointment, product.time, id, fullName, userId, productId, serviceName);
-    console.log('----- UPDATEAPP----**');
-    console.log(newApp);
     return newApp;
   }
   // metodo elimina un espacio de availability.
@@ -278,6 +276,8 @@ export class AvailabilityService {
         startTime,
         blocksNeeded,
       );
+      console.log('------SPACETIME----***');
+      console.log(spaceTime);
       spaceTime?.forEach((item) => {
         const startTime = new Date(appointment.startTime).getTime();
         item.isAvailable = false;
@@ -293,6 +293,8 @@ export class AvailabilityService {
         appointment._id.toString(),
         appEndTime,
       );
+      console.log('------SPACETIME- MODIFIED---***');
+      console.log(spaceTime);
       return spaceTime;
     } catch (error) {
       if (error instanceof Error) {
