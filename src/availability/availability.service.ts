@@ -276,8 +276,6 @@ export class AvailabilityService {
         startTime,
         blocksNeeded,
       );
-      console.log('------SPACETIME----***');
-      console.log(spaceTime);
       spaceTime?.forEach((item) => {
         const startTime = new Date(appointment.startTime).getTime();
         item.isAvailable = false;
@@ -293,8 +291,7 @@ export class AvailabilityService {
         appointment._id.toString(),
         appEndTime,
       );
-      console.log('------SPACETIME- MODIFIED---***');
-      console.log(spaceTime);
+    
       return spaceTime;
     } catch (error) {
       if (error instanceof Error) {
@@ -326,19 +323,13 @@ export class AvailabilityService {
       (item) =>
         new Date(item.startTime).getTime() === new Date(startTime).getTime(),
     );
-    console.log('---------START - INDEX---------**');
-    console.log(startIndex);
     // si el index es -1, no existe. null
     if (startIndex === -1) return null;
     // creo una lista nueva con los espacios necesarios para la cita
-    const slots = agenda.slice(startIndex, startIndex + blocksNeeded);
-    console.log('---------slots LENGTH----***');
-    console.log(slots.length);
-    console.log(blocksNeeded);
+    const slots = agenda.slice(startIndex, startIndex + Math.ceil(blocksNeeded));
     // si no tenemos los espacios necesarios. null
-    if (slots.length !== blocksNeeded) return null;
-    console.log('--------SLOTS SLICED-----**');
-    console.log(slots);
+    if (slots.length < blocksNeeded) return null;
+   
     const consecutive = slots.every((slot, index) => {
       // esto debe darnos BadRequest, cuando apartir de segun espacio No esta disponible.
       if (!slot.isAvailable && index !== 0) {
