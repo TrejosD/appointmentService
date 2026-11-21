@@ -228,7 +228,6 @@ export class AvailabilityService {
   }
   // metodo actualiza un espacio de agenda para cita
   async updateAppointment(id: string, appointment: Appointment, fullName: string, userId: string, productId: string, serviceName: string) {
-    console.log('UpdateAppointment');
     const product = await this.bussinessService.findProductByID(
       appointment.bussinessID,
       appointment.productID,
@@ -237,6 +236,8 @@ export class AvailabilityService {
       throw new NotFoundException(`Product not found`);
     }
     const newApp = await this.updateAgendaSpace(appointment, product.time, id, fullName, userId, productId, serviceName);
+    console.log('----- UPDATEAPP----**');
+    console.log(newApp);
     return newApp;
   }
   // metodo elimina un espacio de availability.
