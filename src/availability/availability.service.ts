@@ -49,8 +49,10 @@ export class AvailabilityService {
     return newAva;
   }
   // este metodo crea los dias necesarios de agenda, desde hoy a 14 dias
-  populateEmptyAgendas(id: string) {
-    const dates = this.createDayList(new Date());
+  async populateEmptyAgendas(id: string) {
+    //* este id es un bussId.
+    const buss = await this.bussinessService.findOneById(id);
+    const dates = this.createDayList(new Date(), buss!.schedule.days);
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     dates.forEach(async (dayDate) => {
       // revisamos si la fecha "dayDate" actual existe
@@ -95,15 +97,21 @@ export class AvailabilityService {
     );
   }
   // metodo crea una lista de fechas basado en hoy, los dias que le indiquemos adelante.
-  createDayList(today: Date): Date[] {
+  //*aca vamos a crear solo los dias, de acuerdo a el horario seleccionado
+  createDayList(today: Date, allowedDays : number[], daysToGenerate: number = 10 ): Date[] {
+    if(!allowedDays || allowedDays.length == 0 ) return [];
     const dateList: Date[] = [];
-    // esta es la cantidad de dias de agenda que creamos
-    for (let i = 0; i < 10; i++) {
-      const newToday = today;
-      const dateTosave = newToday.setDate(newToday.getDate() + 1);
-      const ii = new Date(dateTosave);
-      dateList.push(ii);
+    const currentDate = new Date(today);
+
+    while (dateList.length < daysToGenerate){
+      currentDate.setDate(currentDate.getDate() +1);
+      const jsDay = currentDate.getDay();
+      const mappedDay = jsDay === 0?7 : jsDay;
+      if(allowedDays.includes(mappedDay)){
+        dateList.push(new Date(currentDate));
+      }
     }
+    
     return dateList;
   }
   // metodo escuentra todos los espacios availability para un bussiness
@@ -121,7 +129,7 @@ export class AvailabilityService {
     const month = String(date.getMonth()+1).padStart(2,'0');
     return `${day}-${month}`;
   };
-
+//metodo da formato a la fecha
   formatDate = (date: string):string => {
     const [day, month] = date.split('-');
     return `${day.padStart(2, '0')}-${month.padStart(2, '0')}`;
