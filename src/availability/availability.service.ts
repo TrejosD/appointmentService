@@ -353,8 +353,8 @@ export class AvailabilityService {
   // con este metodo creo los sloths vacios basado en el horario del bussiness
   createEmptyAgenda(
     today: Date, //fecha del dia
-    startYourney: number, //number ex: 8 == 8:00 am
-    endYourney: number, //number ex 17 == 17:00 / 5:00 pm
+    startYourney: string, //number ex: 8 == 8:00 am
+    endYourney: string, //number ex 17 == 17:00 / 5:00 pm
     timeSpace: number = 30,
   ): {
     startTime: Date;
@@ -369,10 +369,17 @@ export class AvailabilityService {
       isAvailable: boolean;
       reservationID?: string;
     }[] = [];
+    //*aca tomamos las horas y minutos del string, y los convertimos en int, trabajables.
+    const [startStringHours, startStringMinutes] = startYourney.trim().split(':');
+    const startHours = parseInt(startStringHours, 10);
+    const startMinutes = parseInt(startStringMinutes, 10);
+    const [endStringHours, endStringMinutes] = endYourney.trim().split(':');
+    const endHours = parseInt(endStringHours, 10);
+    const endMinutes = parseInt(endStringMinutes, 10);
     const nowTime = new Date(today);
-    nowTime.setHours(startYourney, 0, 0, 0);
+    nowTime.setHours(startHours, startMinutes, 0, 0);
     const endYourneyTime = new Date(today);
-    endYourneyTime.setHours(endYourney, 0, 0, 0);
+    endYourneyTime.setHours(endHours, endMinutes, 0, 0);
     // interar en bloques de tiempo de 30 minutos
     while (nowTime < endYourneyTime) {
       const blockStart = new Date(nowTime);
