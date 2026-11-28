@@ -79,6 +79,8 @@ export class AvailabilityService {
         schedule.endYourney,
         buss.defaultAppointmentTime,
       );
+      console.log('-----DESDE CREATEINFOAVA----***');
+      console.log(slots);
       const infoNeeded = {
         bussinessID: id,
         dayDate: dayDate,
@@ -369,7 +371,7 @@ export class AvailabilityService {
       isAvailable: boolean;
       reservationID?: string;
     }[] = [];
-    //*aca tomamos las horas y minutos del string, y los convertimos en int, trabajables.
+    //*aca tomamos las horas y minutos del string, y los convertimos en int, trabajables
     const [startStringHours, startStringMinutes] = startYourney.trim().split(':');
     const startHours = parseInt(startStringHours, 10);
     const startMinutes = parseInt(startStringMinutes, 10);
@@ -394,6 +396,7 @@ export class AvailabilityService {
       // pasar al siguiente bloque
       nowTime.setMinutes(nowTime.getMinutes() + timeSpace);
     }
+    console.log(dayAgenda);
     return dayAgenda;
   }
 }
