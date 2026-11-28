@@ -79,8 +79,6 @@ export class AvailabilityService {
         schedule.endYourney,
         buss.defaultAppointmentTime,
       );
-      console.log('-----DESDE CREATEINFOAVA----***');
-      console.log(slots);
       const infoNeeded = {
         bussinessID: id,
         dayDate: dayDate,
@@ -396,7 +394,6 @@ export class AvailabilityService {
       // pasar al siguiente bloque
       nowTime.setMinutes(nowTime.getMinutes() + timeSpace);
     }
-    console.log(dayAgenda);
     return dayAgenda;
   }
 }
