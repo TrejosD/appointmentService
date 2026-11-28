@@ -42,7 +42,7 @@ export class AppointmentService {
         newApp,
         user!.fullName,createAppointmentDto.customerID,createAppointmentDto.productID, serviceName.name,
       );
-      console.log(spaceUpdated);
+      //todo aca deberia enviar la notificacion
       return spaceUpdated;
     } catch (error) {
       await this.remove(newApp._id.toString());

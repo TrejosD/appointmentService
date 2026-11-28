@@ -12,11 +12,11 @@ export class Schedule {
   @Prop({
     index: true,
   })
-  startYourney: number;
+  startYourney: string;
   @Prop({
     index: true,
   })
-  endYourney: number;
+  endYourney: string;
 }
 
 export const ScheduleSchema = SchemaFactory.createForClass(Schedule);
